@@ -1,0 +1,42 @@
+body {
+    background-color: lightblue;
+}
+
+.Logo {
+    width: 224px;
+    height: 300px;
+    border-color: black;
+    border-width: 10px;
+}
+
+h1 {
+    text-color: #663300;
+    text-align: center;
+    letter-spacing: 3px;
+    font-family: Verdana, Geneva;
+}
+
+ul {
+    list-style-type: none;
+    margin: 0 auto;
+    padding: 0;
+    background-color: #333;
+}
+
+li {
+    float: left;
+}
+
+li a {
+    display: inline-block;
+    background-color: #ffa500;
+    color: blue;
+    padding: 14px 16px;
+    text-align: center;
+    font-family: Verdana, Geneva;
+    text-decoration: none;
+}
+
+li a:hover {
+    background-color: #111;
+}
