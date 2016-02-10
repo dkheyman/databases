@@ -1,0 +1,45 @@
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="../css/form.css">
+        <script type = "text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+        <script type="text/javascript" src="../js/login.js"></script>
+        <script type = "text/javascript" language="javascript">
+            
+            function submit_change() {
+                if (check_password($("#username").val(), $("#old_password").val())) {
+                    alert("Incorrect password. Please try again");
+                    return;
+                }
+                if($("#new_password").val() == $("#confirm_password").val()) {
+                    if (!test_password($("#new_password").val())) {
+                        return;
+                    }
+                    $.post("../php_calls/mail.php",
+                            {
+                                action: "change",
+                                username: $("#username").val(),
+                                old_password: $("#old_password").val(),
+                                new_password: $("#new_password").val(),
+                            },
+                            function(data){
+                                console.log(data);
+                            })
+                }
+                else {
+                    alert("Passwords do not match, please try again!");
+                    $("#replace").trigger("reset");
+                }
+            }
+        </script>
+   </head>
+   <body>
+       <h1 class="replacement">Password Change</h1>
+       <form id="replace" action="javascript:submit_change()" method="post" class="replacement">
+           Username: <input type="text" name="username" id="username" required><br>
+           Old Password: <input type="password" name="old_password" id="old_password" required><br>
+           New Password: <input type="password" name="new_password" id="new_password" required<br>
+           Confirm New Password: <input type="password" name="confirm_password" id="confirm_password" required<br>
+           <input id="change_btn" type="submit">
+       </form>
+   </body>
+</html>

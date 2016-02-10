@@ -20,7 +20,6 @@
     $userID = generate_userID();
 
     $query = "INSERT INTO Users (userID, username, password, email, type) VALUES ('$userID', '$username', '$password', '$email', '$type')";
-
     $con = connect_to_db("bookly");
     mysqli_query($con, $query);
     mysqli_close($con);

@@ -12,6 +12,7 @@ body {
 h1 {
     text-color: #663300;
     text-align: center;
+    background-color: red;
     letter-spacing: 3px;
     font-family: Verdana, Geneva;
 }
