@@ -1,6 +1,6 @@
 <?php
 
-    require 'db_functions.php';
+require 'db_functions.php';
 
 function get_users_auctions($userID) {
 	$query = "SELECT asking_price, end_time, title, COUNT(*) as count
