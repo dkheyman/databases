@@ -14,7 +14,7 @@ function test_password(password) {
         alert("Password needs to have at least 2 of the 3: digits, lowercase, uppercase letters");
         return 0;
     }
-    if (password.length < 9) {
+    if (password.length < 8) {
         alert("Password needs to have at least 8 characters");
         return 0;
     }

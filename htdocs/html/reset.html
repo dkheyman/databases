@@ -1,6 +1,6 @@
 <html>
     <head>
-        <link rel="stylesheet" type="text/css" href="../css/login.css">
+        <link rel="stylesheet" type="text/css" href="../css/form.css">
         Password Reset<br>
         <script type = "text/javascript" 
             src = "http://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
@@ -10,33 +10,22 @@
                 $.post("../php_calls/mail.php",
                         {
                             action: "reset",
-                            username: $("#username").val(),
+                            userID: $("#userID").val(),
                             email: $("#email").val(),
                         },
                         function(data){
-                            console.log(data);
-                        })
-                
-                /*$("#reset_btn").click(function(){
-                        var form_data = new FormData($(form));
-                        $.ajax({
-                            url: "../php_calls/mail.php", 
-                            data: {action: "reset", form_data},
-                            type: 'post',
-                            success: function(result){
-                                alert("Hello");
-                                },
-                            failure: function(result){
-                                alert("Hello");
-                            }});
-                        });
-                */}
+                            if (data == 1) {
+                                window.location = "http://localhost:8888/html/password_reset.html";
+                            }
+                        }
+                )
+            }
         </script>
    </head>
    <body>
        <form action="javascript:submit_reset()" method="post">
-           Username: <input type="text" name="username" id="username"><br>
-           Email: <input type="text" name="email" id="email"><br>
+           userID: <input type="text" name="userID" id="userID" required><br>
+           Email: <input type="text" name="email" id="email" required><br>
            <input id="reset_btn" type="submit">
        </form>
    </body>

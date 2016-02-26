@@ -1,3 +1,7 @@
+<?php
+session_start();
+echo session_id();
+?>
 <html>
     <head>
         <link rel="stylesheet" type="text/css" href="css/welcome.css">
@@ -8,8 +12,8 @@
             <img src="images/logo.jpeg" class="Logo">
         </h2>    
         <ul>
-            <li><a href="html/register.html">First-Time Users</a></li>
-            <li><a href="html/login.html">Returning Users</a></li>
+            <li><a href="html/register.php">First-Time Users</a></li>
+            <li><a href="html/login.php">Returning Users</a></li>
         </ul>
     </body>
 </html>

@@ -15,3 +15,16 @@
             return $error;
         }
     }
+
+    function execute_change($query) {
+        $con = connect_to_db("bookly");
+        $result = mysqli_query($con, $query);
+        if ($result) {
+            mysqli_close($con);
+            return $result;
+        } else {
+            $error = mysqli_error($con);
+            mysqli_close($con);
+            return $error;
+        }
+    }
