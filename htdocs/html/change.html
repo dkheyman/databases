@@ -6,7 +6,7 @@
         <script type = "text/javascript" language="javascript">
             
             function submit_change() {
-                if (check_password($("#username").val(), $("#old_password").val())) {
+                if (check_password($("#userID").val(), $("#old_password").val())) {
                     alert("Incorrect password. Please try again");
                     return;
                 }
@@ -17,7 +17,7 @@
                     $.post("../php_calls/mail.php",
                             {
                                 action: "change",
-                                username: $("#username").val(),
+                                userID: $("#userID").val(),
                                 old_password: $("#old_password").val(),
                                 new_password: $("#new_password").val(),
                             },
@@ -35,7 +35,7 @@
    <body>
        <h1 class="replacement">Password Change</h1>
        <form id="replace" action="javascript:submit_change()" method="post" class="replacement">
-           Username: <input type="text" name="username" id="username" required><br>
+           userID: <input type="text" name="userID" id="userID" required><br>
            Old Password: <input type="password" name="old_password" id="old_password" required><br>
            New Password: <input type="password" name="new_password" id="new_password" required<br>
            Confirm New Password: <input type="password" name="confirm_password" id="confirm_password" required<br>
