@@ -24,7 +24,7 @@ function get_all_active_auctions() {
 				ON auction.auctionID = view.auctionID
 				WHERE auction.end_time > " . $current_time . " ;";
 	$result = run_query($query);
-	$result = run_query($query);
+	//$result = run_query($query);
 	for (int $i = 0; $i < count($result); $i++) {
 		for (int $j = 0; $j < count($result[$i]); $j++) {
 			echo $result[$i][$j];
