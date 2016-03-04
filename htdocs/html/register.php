@@ -19,12 +19,11 @@
                             user_type: $('input:radio[name=user_type]:checked').val(),
                         },
                         function(data) {
-                            console.log(data);
                             if (data == 1) {
                                 window.location = 'http://localhost:8888/html/welcome.php';
                             }
                             else {
-                                alert("Registration failed");
+                                alert(data);
                             }
                         })
                 } else {

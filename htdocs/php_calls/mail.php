@@ -5,11 +5,6 @@
     if(isset($_POST['action']) && !empty($_POST['action'])) {
         $action = $_POST['action'];
         switch($action) {
-                case "check":
-                    if (isset($_POST['userID']) && isset($_POST['old_password'])) {
-                        check_password($_POST['userID'], $_POST['old_password']);
-                    }
-                    break;
                 case "reset":
                     if (isset($_POST['userID']) && isset($_POST['email'])) {
                         reset_password($_POST['userID'], $_POST['email']);
@@ -17,7 +12,7 @@
                     break;
                 case "change":
                     if (isset($_POST['userID']) && isset($_POST['old_password']) && isset($_POST['new_password'])) {
-                        change_password($_POST['userID'], $_POST['old_password'], $_POST['new_password']);
+                        change_password($_POST['userID'], $_POST['old_password'], $_POST['new_password'], $_POST['confirm_password']);
                     }
                     break;
                 case "add_user":
@@ -36,6 +31,12 @@
                         login_user($userID, $password);
                     }
                     break;
+                case "grab_usertype":
+                    $userID = $_SESSION['userID'];
+                    if (isset($userID)) {
+                        grab_usertype($userID);
+                    }    
+                    break;
                 case "logout":
                     logout();
                     break;
@@ -46,36 +47,79 @@
 
     function reset_password($userID, $email) {
         $new_password = rand_string(10);
-        $query = "UPDATE Users SET password='$new_password' WHERE userID='$userID' AND email='$email'";
-        $result = execute_change($query);
-        if($result != 1) {
-            echo "Incorrect userID or email. Please try again!";
+        //$new_password = mysqli_real_escape_string($new_password);
+        if (find_userID($userID) && (find_email($userID) == $email)) {
+            $query_password = sha1($new_password);
+            $query = "UPDATE Users SET password=? WHERE userID=? AND email=?";
+            $args = array($query_password, $userID, $email);
+            $result = execute_change($query, 'sss', $args);
+            if(is_string($result)) {
+                echo "Something went wrong with the execution. Please try again again!";
+            }
+            else {
+                if(email_password_change($email, "RESET", $new_password)) {
+                    echo 1;
+                } else {
+                    echo "Password reset but email failed";
+                }
+            }
         }
         else {
-            if(email_password_change($email, "RESET")) {
-                echo 1;
-            } else {
-                echo "Password reset but email failed";
-            }
+            echo "Incorrect userID or email. Please try again!";
         }
     }
 
-    function email_password_change( $email, $user_type ) {
+    function email_password_change( $email, $user_type, $new_password ) {
         $subject = "Bookly Password " . $user_type;
-        $message = "Your bookly password has been reset!\r\n\r\nSincerely, Bookly Engineering Team";
+        $intermediate = '';
+        $message = "Your bookly password has been reset!\n\n";
+        if ($new_password != NULL) {
+            $intermediate = "\nYour new password is $new_password. Please change it immediately upon following login!\n";
+        }    
+        $signature = "\n\n\nSincerely,\n Bookly Engineering Team";
+        $message .= $intermediate . $signature;
         return mail($email, $subject, $message);
     }
 
     function find_userID($userID) {
-        $query = "SELECT userID from Users where userID='$userID'";
-        $result = run_query($query);
-        //print_r($result);
+        //$query = "SELECT userID from Users where userID='$userID'";
+        //$result = run_query($query);
+        $query = "SELECT userID from Users where userID=?";
+        $args = array($userID);
+        $result = run_query($query, 's', $args);
         if (is_array($result) && count($result) == 1) {
             return 1;
         }
         else {
             return 0;
         } 
+    }
+    
+    function test_password($password) {
+        if (strlen($password) < 8) {
+            echo "Password too short!";
+            return;
+        }
+        if (!preg_match("#[0-9]+#", $password)) {
+            echo "Password must include at least one number!";
+            return;
+        }
+        if (!preg_match("#[a-zA-Z]+#", $password)) {
+            echo "Password must include at least one letter!";
+            return;
+        }
+        echo 1;
+    }
+
+    function grab_usertype($userID) {
+        $query = "SELECT type from Users where userID='$userID'";
+        $result = run_query($query);
+        if (count($result) == 1 && is_array($result)) {
+            $usertype = $result[0][0];
+            echo $usertype;
+        } else {
+            echo 0;
+        }
     }
 
     function login_user($userID, $password) {
@@ -88,56 +132,80 @@
                 $_SESSION["userID"] = $userID;
                 return;
            } else {
-               echo 0;
+               echo "Incorrect username/password. Please try again!";
                 return;
            }
         } else {
-            echo 0;
+            echo "Username $userID does not exist!";
             return;
         }
     } 
 
     function check_password($userID, $old_password) {
-        $query = "SELECT password from Users where userID='$userID'";
-        $result = run_query($query);
-        $password = '';
+        $query_password = sha1($old_password);
+        $query = "SELECT password from Users where userID=? and password=?";
+        $args = array($userID, $query_password);
+        $result = run_query($query, 'ss', $args);
         if (is_array($result) && count($result) == 1 ) {
-            $password = $result[0][0];
-        } else {
-            echo 0;
-            return;
-        }    
-        if ($old_password == $password) {
             echo 1;
             return;
         } else {
             echo 0;
             return;
-        }
+        }    
     }
 
-    function change_password($userID, $old_password, $new_password) {
-        $query = "UPDATE Users SET password='$new_password' WHERE userID='$userID' AND password='$old_password'";
-        $result = run_query($query);
-        if (is_string($result)) {
-            echo "Incorrect userID or password. Please try again!" . $result; 
-            return;
-        }
-        else {
-            echo "Password for $userID changed successfully!";
-        }
-
-        $query = "SELECT email from Users WHERE userID='$userID'";
-        $result = run_query($query);
-        if (is_array($result) && count($result) == 1) {
-            $email = $result[0][0];
-            if (!email_password_change($email, "CHANGE")) {
-                echo "Something went wrong when emailing password change\n";
+    function change_password($userID, $old_password, $new_password, $confirm_password) {
+        ob_start();
+        check_password($userID, $old_password);
+        $password_ok = ob_get_clean();
+        if ($password_ok == 1) {
+            if (!($confirm_password === $new_password) ) { echo "Passwords don't match!"; return; }
+            ob_start();
+            test_password($new_password);
+            $password_strong = ob_get_clean(); 
+            if ($password_strong == 1) {
+                $query_password = sha1($new_password);
+                $query = "UPDATE Users SET password=? where userID=?";
+                $args = array($query_password, $userID);
+                $result = execute_change($query, 'ss', $args);
+                if (is_string($result)) {
+                    echo $result; 
+                    return;
+                }
+                else {
+                    echo 1;
+                }
+                $email = find_email($userID);
+                if (!$email) {
+                    echo "Email for $userID does not exist\n";
+                    return;
+                }
+                if (!email_password_change($email, "CHANGE", NULL)) {
+                    echo "Something went wrong when emailing password change\n";
+                    return;
+                }
+            } else {
+                echo $password_strong;
                 return;
             }
         }
         else {
-            echo "Email does not exist\n";
+            echo $password_ok . "Username and password combination is incorrect. Please try again";
+            return;
+        }
+    }
+
+    function find_email($userID) {
+        $query = "SELECT email from Users WHERE userID=?";
+        $args = array($userID);
+        $result = run_query($query, 's', $args);
+        if (is_array($result) && count($result) == 1) {
+            $email = $result[0][0];
+            return $email;
+        }
+        else {
+            return;
         }
     }
 
@@ -149,13 +217,18 @@
 
     function add_user($userID, $password, $email, $user_type ) {
         $result = find_userID($userID);
-        //echo $result . " found\n";
         if ($result == 1) {
             echo "UserID $userID already exists!\n";
             return;
         }
-        $query = "INSERT INTO Users (userID, password, email, type) VALUES ('$userID', '$password', '$email', '$user_type')";
-        $result = run_query($query);
+        if (filter_var($email, FILTER_VALIDATE_EMAIL) === false) {
+            echo "Email $email contains invalid characters";
+            return;
+        }
+        $password = sha1($password);
+        $query = "INSERT INTO Users (userID, password, email, type) VALUES (?, ?, ?, ?)";
+        $args = array($userID, $password, $email, $user_type);
+        $result = execute_change($query, 'ssss', $args);
         if (is_string($result)) {
             echo "Adding user $userID failed: " . $result;
             return;

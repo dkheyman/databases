@@ -20,20 +20,3 @@ function test_password(password) {
     }
     return 1;
 }
-
-function check_password(username, old_password) {
-    $.post("../php_calls/mail.php",
-            {
-            action: "check",
-            username: username,
-            old_password: old_password,
-            },
-            function(data) {
-                return data;
-            }
-    )
-}
-
-function callback(data) {
-    return data;
-}

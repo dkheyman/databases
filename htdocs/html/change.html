@@ -6,30 +6,25 @@
         <script type = "text/javascript" language="javascript">
             
             function submit_change() {
-                if (check_password($("#userID").val(), $("#old_password").val())) {
-                    alert("Incorrect password. Please try again");
-                    return;
+                $.post("../php_calls/mail.php",
+                        {
+                            action: "change",
+                            userID: $("#userID").val(),
+                            old_password: $("#old_password").val(),
+                            new_password: $("#new_password").val(),
+                            confirm_password : $("#confirm_password").val(),    
+                        },
+                        function(data){
+                            console.log(data);
+                            if (data == 1) {
+                                window.location.href = "http://localhost:8888/html/password_change.html";
+                            }
+                            else {
+                                alert(data);
+                                $("#replace").trigger("reset");
+                            }
+                        })
                 }
-                if($("#new_password").val() == $("#confirm_password").val()) {
-                    if (!test_password($("#new_password").val())) {
-                        return;
-                    }
-                    $.post("../php_calls/mail.php",
-                            {
-                                action: "change",
-                                userID: $("#userID").val(),
-                                old_password: $("#old_password").val(),
-                                new_password: $("#new_password").val(),
-                            },
-                            function(data){
-                                console.log(data);
-                            })
-                }
-                else {
-                    alert("Passwords do not match, please try again!");
-                    $("#replace").trigger("reset");
-                }
-            }
         </script>
    </head>
    <body>
