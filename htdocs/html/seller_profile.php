@@ -24,78 +24,55 @@ session_start();
                             }
                         })
         	}
-        	function get_current_bids() {
+        	function get_current_aucs() {
         		$.post("../php_calls/user.php",
                         {
-                            action: "get_current_bids",
+                            action: "get_current_aucs",
                             userID: username,
                         },
                         function(data) {
                             console.log(data);
                             if (data != 0) {
-                                document.getElementById(currBids).innerHTML = data;
+                                document.getElementById(currAucs).innerHTML = data;
                             }
                             else {
-                                document.getElementById(currBids).innerHTML = "No bids found. Try bidding on an item!";
+                                document.getElementById(currAucs).innerHTML = "No auctions found. Try creating an auction!";
                             }
                         })
         	}
-        	function get_watches() {
+        	function get_past_aucs() {
         		$.post("../php_calls/user.php",
                         {
-                            action: "get_watches",
+                            action: "get_past_aucs",
                             userID: username,
                         },
                         function(data) {
                             console.log(data);
                             if (data != 0) {
-                                document.getElementById(watches).innerHTML = data;
+                                document.getElementById(pastAucs).innerHTML = data;
                             }
                             else {
-                                document.getElementById(watches).innerHTML = "No watches found. Add a watch to an auction to keep an eye on some choice items!";
-                            }
-                        })
-        	}
-        	function get_past_bids() {
-        		$.post("../php_calls/user.php",
-                        {
-                            action: "get_past_bids",
-                            userID: username,
-                        },
-                        function(data) {
-                            console.log(data);
-                            if (data != 0) {
-                                document.getElementById(pastBids).innerHTML = data;
-                            }
-                            else {
-                                document.getElementById(pastBids).innerHTML = "No bids found. Try bidding on an item!";
+                                document.getElementById(pastAucs).innerHTML = "No auctions found. Try creating an auction!";
                             }
                         })
         	}
         	get_username();
-        	get_current_bids();
-        	get_watches();
-        	get_past_bids();
+        	get_current_aucs();
+        	get_past_aucs();
         </script>
         <form id = "user"> Welcome! </form> <br>
     </head>    
     <body>
     	<h1>
-    		<br> Current Bids: <br>
+    		<br> Current Auctions: <br>
     	</h1>
-    	<form id = "currBids">
+    	<form id = "currAucs">
 
     	</form>
     	<h1>
-    		<br> Watches: <br>
+    		<br> Past Auctions: <br>
     	</h1>
-		<form id = "watches" >
-
-    	</form>
-    	<h1>
-    		<br> Past Bids: <br>
-    	</h1>
-    	<form id = "pastBids">
+    	<form id = "pastAucs">
 
     	</form>
    	</body>

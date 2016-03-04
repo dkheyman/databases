@@ -33,6 +33,22 @@
         			return 0;
         		}
         		break;
+            case "get_current_aucs":
+                if (isset($_POST['userID']))
+                    get_current_aucs();
+                else {
+                    echo 0;
+                    return 0;
+                }
+                break;
+            case "get_past_aucs":
+                if(isset($_POST['userID']))
+                    get_past_aucs();
+                else {
+                    echo 0;
+                    return 0;
+                }
+                break;
         	default:
                 echo "Wrong";
         }
@@ -63,5 +79,21 @@
 				"AND auction.end_time <= " . $current_time . " ;";
     	$result = run_query($query);
     	echo $result;
+    }
+    function get_current_aucs(){
+        $query = "SELECT isbn, asking_price, value, end_time
+                FROM auction
+                WHERE auction.sellerID = " . $_SESSION['userID'] .
+                "AND auction.end_time > " . $current_time . " ;";
+        $result = run_query($query);
+        echo $result;
+    }
+    function get_past_aucs(){
+        $query = "SELECT isbn, asking_price, value, end_time
+                FROM auction
+                WHERE auction.sellerID = " . $_SESSION['userID'] .
+                "AND auction.end_time <= " . $current_time . " ;";
+        $result = run_query($query);
+        echo $result;
     }
 ?>

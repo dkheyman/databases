@@ -1,7 +1,14 @@
 <?php
-
+session_start();
 require 'db_functions.php';
 
+if(isset($_POST['action']) && !empty($_POST['action'])) {
+	$action = $_POST['action'];
+	switch($action) {
+		case "get_all_active_auctions":
+				get_all_active_auctions();
+        		break;
+	}
 function get_users_auctions($userID) {
 	$query = "SELECT asking_price, end_time, title, COUNT(*) as count
 				FROM (auction JOIN book
