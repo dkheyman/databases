@@ -77,26 +77,25 @@ session_start();
         	get_watches();
         	get_past_bids();
         </script>
-        <form id = "user"> Welcome! </form> <br>
+        <form id="user"> Welcome! </form> <br>
     </head>    
     <body>
     	<h1>
     		<br> Current Bids: <br>
     	</h1>
-    	<form id = "currBids">
+    	<form id="currBids">
 
     	</form>
     	<h1>
     		<br> Watches: <br>
     	</h1>
-		<form id = "watches" >
+		<form id="watches" >
 
     	</form>
     	<h1>
     		<br> Past Bids: <br>
     	</h1>
-    	<form id = "pastBids">
-
+    	<form id="pastBids">
     	</form>
    	</body>
 </html>

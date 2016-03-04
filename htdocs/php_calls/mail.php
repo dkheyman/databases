@@ -112,8 +112,9 @@
     }
 
     function grab_usertype($userID) {
-        $query = "SELECT type from Users where userID='$userID'";
-        $result = run_query($query);
+        $query = "SELECT type from Users where userID=?";
+        $args = array($userID);
+        $result = run_query($query, 's', $args);
         if (count($result) == 1 && is_array($result)) {
             $usertype = $result[0][0];
             echo $usertype;
