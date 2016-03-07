@@ -5,19 +5,28 @@ session_start();
     <head>
         <link rel="stylesheet" type="text/css" href="../css/form.css">
         <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-        <script type="text/javascript" src="../js/login.js"></script>
         <script type="text/javascript" language="javascript">
-        	var username;
-        	function get_username() {
+
+            window.username = ''
+            $(document).ready(function() {
+                get_username();
+            });
+
+            function run() {
+                get_current_aucs();
+                get_past_aucs();
+            }
+
+            function get_username() {
         		$.post("../php_calls/user.php",
                         {
                             action: "get_user",
                         },
                         function(data) {
-                            console.log(data);
                             if (data != 0) {
-                            	username = data;
-                                document.getElementById(user).innerHTML = "Welcome " + data + "!";
+                            	window.username = data;
+                                document.getElementById('user').innerHTML = "Welcome " + window.username + "!";
+                                run();
                             }
                             else {
                                 alert("Unable to find profile!");
@@ -28,15 +37,15 @@ session_start();
         		$.post("../php_calls/user.php",
                         {
                             action: "get_current_aucs",
-                            userID: username,
+                            userID: window.username,
                         },
                         function(data) {
                             console.log(data);
                             if (data != 0) {
-                                document.getElementById(currAucs).innerHTML = data;
+                                document.getElementById('currAucs').innerHTML = data;
                             }
                             else {
-                                document.getElementById(currAucs).innerHTML = "No auctions found. Try creating an auction!";
+                                document.getElementById('currAucs').innerHTML = "No auctions found. Try creating an auction!";
                             }
                         })
         	}
@@ -44,36 +53,34 @@ session_start();
         		$.post("../php_calls/user.php",
                         {
                             action: "get_past_aucs",
-                            userID: username,
+                            userID: window.username,
                         },
                         function(data) {
                             console.log(data);
                             if (data != 0) {
-                                document.getElementById(pastAucs).innerHTML = data;
+                                document.getElementById('pastAucs').innerHTML = data;
                             }
                             else {
-                                document.getElementById(pastAucs).innerHTML = "No auctions found. Try creating an auction!";
+                                document.getElementById('pastAucs').innerHTML = "No auctions found. Try creating an auction!";
                             }
                         })
-        	}
-        	get_username();
-        	get_current_aucs();
-        	get_past_aucs();
+            }
+
+
         </script>
-        <form id = "user"> Welcome! </form> <br>
     </head>    
     <body>
+        <form id="user"> Welcome! </form> <br>
     	<h1>
     		<br> Current Auctions: <br>
     	</h1>
-    	<form id = "currAucs">
+    	<form id="currAucs">
 
     	</form>
     	<h1>
     		<br> Past Auctions: <br>
     	</h1>
-    	<form id = "pastAucs">
-
+    	<form id="pastAucs">
     	</form>
    	</body>
 </html>

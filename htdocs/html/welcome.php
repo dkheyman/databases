@@ -29,7 +29,7 @@ session_start();
                     if (data === 'buyer\n') {
                         window.location.href = "/html/buyer_profile.php";
                     } else if (data == 'seller\n') {
-                        window.location.href = "/html//seller_profile.php";
+                        window.location.href = "/html/seller_profile.php";
                     } else {
                         var temp = data.length;
                         alert(temp);

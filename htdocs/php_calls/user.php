@@ -9,16 +9,17 @@
         		echo $_SESSION['userID'];
         		return $_SESSION['userID'];
         		break;
-        	case "get_current_bids":
-        		if (isset($_POST['userID']))
-        			get_current_bids();
+            case "get_current_bids":
+        		if (isset($_POST['userID']) && strlen($_POST['userID']) > 0) {
+                    get_current_bids();
+                }
         		else {
-        			echo 0;
+        			echo "Hello";
         			return 0;
         		}
         		break;
         	case "get_watches":
-        		if (isset($_POST['userID']))
+        		if (isset($_POST['userID']) && strlen($_POST['userID']) > 0)
         			get_watches();
         		else {
         			echo 0;
@@ -26,7 +27,7 @@
            		}
         		break;
         	case "get_past_bids":
-        		if (isset($_POST['userID']))
+        		if (isset($_POST['userID']) && strlen($_POST['userID']) > 0)
         			get_past_bids();
         		else {
         			echo 0;
@@ -34,7 +35,7 @@
         		}
         		break;
             case "get_current_aucs":
-                if (isset($_POST['userID']))
+                if (isset($_POST['userID']) && strlen($_POST['userID']) > 0)
                     get_current_aucs();
                 else {
                     echo 0;
@@ -42,7 +43,7 @@
                 }
                 break;
             case "get_past_aucs":
-                if(isset($_POST['userID']))
+                if(isset($_POST['userID']) && strlen($_POST['userID']) > 0)
                     get_past_aucs();
                 else {
                     echo 0;
@@ -68,14 +69,14 @@
         $args = array($_SESSION['userID'], $current_time);
         $result = run_query($query, 'ss', $args);
         if (is_array($result) && count($result) > 0) {
-    	    echo $result;
+    	    print_r($result);
         } else {
             echo "No Current Bids";
         }
     }
     function get_watches(){
         $current_time = current_time();
-    	$query = "SELECT isbn, asking_price, value, userID, end_time
+    	$query = "SELECT isbn, asking_price, starting_price, userID, end_time
 				FROM (auction JOIN watch
 				ON auction.auctionID = watch.auctionID)
 				WHERE watch.buyerID = ?
@@ -83,7 +84,7 @@
         $args = array($_SESSION['userID'], $current_time);
         $result = run_query($query, 'ss', $args);
         if (is_array($result) && count($result) > 0) {
-            echo $result;
+            print_r($result);
         } else {
             echo "No current watches";
         }
@@ -99,7 +100,7 @@
         $args = array($_SESSION['userID'], $current_time);
         $result = run_query($query, 'ss', $args);
         if (is_array($result) && count($result) > 0) {
-            echo $result;
+            print_r($result);
         } else {
             echo "No past bids";
         }
