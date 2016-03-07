@@ -69,7 +69,7 @@
         $args = array($_SESSION['userID'], $current_time);
         $result = run_query($query, 'ss', $args);
         if (is_array($result) && count($result) > 0) {
-    	    print_r($result);
+            echo json_encode($result);
         } else {
             echo "No Current Bids";
         }
@@ -84,7 +84,7 @@
         $args = array($_SESSION['userID'], $current_time);
         $result = run_query($query, 'ss', $args);
         if (is_array($result) && count($result) > 0) {
-            print_r($result);
+            echo json_encode($result);
         } else {
             echo "No current watches";
         }
@@ -100,21 +100,21 @@
         $args = array($_SESSION['userID'], $current_time);
         $result = run_query($query, 'ss', $args);
         if (is_array($result) && count($result) > 0) {
-            print_r($result);
+            echo json_encode($result);
         } else {
             echo "No past bids";
         }
     }
     function get_current_aucs(){
         $current_time = current_time();
-        $query = "SELECT isbn, asking_price, value, end_time
+        $query = "SELECT isbn, asking_price, starting_price, end_time
                 FROM auction
-                WHERE auction.sellerID = ?
+                WHERE auction.userID = ?
                 AND auction.end_time > ?";
         $args = array($_SESSION['userID'], $current_time);
         $result = run_query($query, 'ss', $args);
         if (is_array($result) && count($result) > 0) {
-            echo $result;
+            echo json_encode($result);
         } else {
             echo "No current auctions";
         }
@@ -122,14 +122,14 @@
 
     function get_past_aucs(){
         $current_time = current_time();
-        $query = "SELECT isbn, asking_price, value, end_time
+        $query = "SELECT isbn, asking_price, starting_price, end_time
                 FROM auction
-                WHERE auction.sellerID = ?
+                WHERE auction.userID = ?
                 AND auction.end_time <= ?";
         $args = array($_SESSION['userID'], $current_time);
         $result = run_query($query, 'ss', $args);
         if (is_array($result) && count($result) > 0) {
-            echo $result;
+            echo json_encode($result);
         } else {
             echo "No past auctions";
         }

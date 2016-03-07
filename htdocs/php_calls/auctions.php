@@ -6,9 +6,26 @@ if(isset($_POST['action']) && !empty($_POST['action'])) {
 	$action = $_POST['action'];
 	switch($action) {
 		case "get_all_active_auctions":
-				get_all_active_auctions();
-        		break;
-	}
+			get_all_active_auctions();
+            break;
+        case "get_auction_id":
+            get_auction_id();
+            break;
+        case "get_auction_by_id":
+            if (isset($_POST['auction']) && !empty($_POST['auction'])) {
+                get_auction($_POST['auction']);
+            } else {
+                echo 0;
+            }
+        default:
+            echo "Wrong";
+    }
+}
+
+function get_auction_id() {
+    return $_GET['auction_id'];
+}
+
 function get_users_auctions($userID) {
 	$query = "SELECT asking_price, end_time, title, COUNT(*) as count
 				FROM (auction JOIN book

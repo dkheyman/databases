@@ -3,8 +3,9 @@ session_start();
 ?>
 <html>
     <head>
-        <link rel="stylesheet" type="text/css" href="../css/form.css">
+        <link rel="stylesheet" type="text/css" href="../css/table.css">
         <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+        <script type="text/javascript" language="javascript" src="../js/parse.js"></script>
         <script type="text/javascript" language="javascript">
 
             window.username = '';
@@ -44,7 +45,7 @@ session_start();
                         function(data) {
                             console.log(data);
                             if (data != 0) {
-                                document.getElementById('currBids').innerHTML = data;
+                                print_current_bids(data);
                             }
                             else {
                                 document.getElementById('currBids').innerHTML = "No bids found. Try bidding on an item!";
@@ -60,7 +61,7 @@ session_start();
                         function(data) {
                             console.log(data);
                             if (data != 0) {
-                                document.getElementById('watches').innerHTML = data;
+                                print_watches(data);
                             }
                             else {
                                 document.getElementById('watches').innerHTML = "No watches found. Add a watch to an auction to keep an eye on some choice items!";
@@ -76,7 +77,8 @@ session_start();
                         function(data) {
                             console.log(data);
                             if (data != 0) {
-                                document.getElementById('pastBids').innerHTML = data;
+                                print_past_bids(data);
+                                //document.getElementById('pastBids').innerHTML = data;
                             }
                             else {
                                 document.getElementById('pastBids').innerHTML = "No bids found. Try bidding on an item!";

@@ -3,11 +3,12 @@ session_start();
 ?>
 <html>
     <head>
-        <link rel="stylesheet" type="text/css" href="../css/form.css">
+        <link rel="stylesheet" type="text/css" href="../css/table.css">
         <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+        <script type="text/javascript" language="javascript" src="../js/parse.js"></script>
         <script type="text/javascript" language="javascript">
 
-            window.username = ''
+            window.username = '';
             $(document).ready(function() {
                 get_username();
             });
@@ -42,7 +43,7 @@ session_start();
                         function(data) {
                             console.log(data);
                             if (data != 0) {
-                                document.getElementById('currAucs').innerHTML = data;
+                                print_current_auctions(data);
                             }
                             else {
                                 document.getElementById('currAucs').innerHTML = "No auctions found. Try creating an auction!";
@@ -58,7 +59,7 @@ session_start();
                         function(data) {
                             console.log(data);
                             if (data != 0) {
-                                document.getElementById('pastAucs').innerHTML = data;
+                                print_past_auctions(data);
                             }
                             else {
                                 document.getElementById('pastAucs').innerHTML = "No auctions found. Try creating an auction!";
