@@ -1,6 +1,7 @@
 <?php 
     session_start();
     require 'db_functions.php';
+    require 'helpers.php';
 
     if(isset($_POST['action']) && !empty($_POST['action'])) {
         $action = $_POST['action'];
@@ -80,20 +81,6 @@
         $message .= $intermediate . $signature;
         return mail($email, $subject, $message);
     }
-
-    function find_userID($userID) {
-        //$query = "SELECT userID from Users where userID='$userID'";
-        //$result = run_query($query);
-        $query = "SELECT userID from Users where userID=?";
-        $args = array($userID);
-        $result = run_query($query, 's', $args);
-        if (is_array($result) && count($result) == 1) {
-            return 1;
-        }
-        else {
-            return 0;
-        } 
-    }
     
     function test_password($password) {
         if (strlen($password) < 8) {
@@ -142,18 +129,17 @@
         }
     } 
 
-    function check_password($userID, $old_password) {
-        $query_password = sha1($old_password);
-        $query = "SELECT password from Users where userID=? and password=?";
-        $args = array($userID, $query_password);
-        $result = run_query($query, 'ss', $args);
-        if (is_array($result) && count($result) == 1 ) {
-            echo 1;
-            return;
+    function find_book_being_sold($auctionID) {
+        $query = "SELECT title, isbn, imageURL from (Book JOIN
+                Auction on Auction.isbn = Book.isbn) WHERE
+                Auction.auctionID = ?";
+        $args = array($auctionID);
+        $results = run_query($query, 's', $args);
+        if (is_array($results) && count($results) == 1) {
+            return $results[0];
         } else {
-            echo 0;
             return;
-        }    
+        }
     }
 
     function change_password($userID, $old_password, $new_password, $confirm_password) {
@@ -193,19 +179,6 @@
         }
         else {
             echo $password_ok . "Username and password combination is incorrect. Please try again";
-            return;
-        }
-    }
-
-    function find_email($userID) {
-        $query = "SELECT email from Users WHERE userID=?";
-        $args = array($userID);
-        $result = run_query($query, 's', $args);
-        if (is_array($result) && count($result) == 1) {
-            $email = $result[0][0];
-            return $email;
-        }
-        else {
             return;
         }
     }

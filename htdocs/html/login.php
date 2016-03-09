@@ -16,7 +16,7 @@
                 function(data) {
                     console.log(data);
                     if (data == 1) {
-                        window.location.href = 'http://localhost/html/welcome.php';
+                        window.location.href = 'http://localhost:8888/html/welcome.php';
                     }
                     else {
                         alert(data);
@@ -27,7 +27,7 @@
         </script>
    </head>
    <body>
-       <h1 class="replacement">Welcome to Book.ly! Please sign in</title>
+       <h1 class="replacement">Welcome to Book.ly! Please sign in</h1>
        <form id="replace" class="replacement" action="javascript:login_user()" method="post">
            userID: <input type="text" name="userID" id="userID" required><br>
            Password: <input type="password" name="password" id="password" required><br>

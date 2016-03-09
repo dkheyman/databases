@@ -1,6 +1,7 @@
 <?php 
     session_start();
     require 'db_functions.php';
+    require 'helpers.php';
 
     if(isset($_POST['action']) && !empty($_POST['action'])) {
         $action = $_POST['action'];
@@ -14,40 +15,35 @@
                     get_current_bids();
                 }
         		else {
-        			echo "Hello";
-        			return 0;
+        			echo "User cannot be found";
         		}
         		break;
         	case "get_watches":
         		if (isset($_POST['userID']) && strlen($_POST['userID']) > 0)
         			get_watches();
         		else {
-        			echo 0;
-        			return 0;
+        			echo "User cannot be found";
            		}
         		break;
         	case "get_past_bids":
         		if (isset($_POST['userID']) && strlen($_POST['userID']) > 0)
         			get_past_bids();
         		else {
-        			echo 0;
-        			return 0;
+        			echo "User cannot be found";
         		}
         		break;
             case "get_current_aucs":
                 if (isset($_POST['userID']) && strlen($_POST['userID']) > 0)
                     get_current_aucs();
                 else {
-                    echo 0;
-                    return 0;
+                    echo "User cannot be found";
                 }
                 break;
             case "get_past_aucs":
                 if(isset($_POST['userID']) && strlen($_POST['userID']) > 0)
                     get_past_aucs();
                 else {
-                    echo 0;
-                    return 0;
+                    echo "User cannot be found";
                 }
                 break;
         	default:
@@ -55,13 +51,9 @@
         }
     }
     
-    function current_time() {
-        return date('Y-m-d H:i:s', time());
-    }
-
     function get_current_bids(){
         $current_time = current_time();
-    	$query = "SELECT isbn, asking_price, value, userID, end_time
+    	$query = "SELECT auction.auctionID, isbn, asking_price, value, userID, end_time
 				FROM (auction JOIN bid
 				ON auction.auctionID = bid.auctionID)
 				WHERE bid.buyerID = ?
@@ -76,7 +68,7 @@
     }
     function get_watches(){
         $current_time = current_time();
-    	$query = "SELECT isbn, asking_price, starting_price, userID, end_time
+    	$query = "SELECT auction.auctionID, isbn, asking_price, starting_price, userID, end_time
 				FROM (auction JOIN watch
 				ON auction.auctionID = watch.auctionID)
 				WHERE watch.buyerID = ?
@@ -92,7 +84,7 @@
 
     function get_past_bids(){
         $current_time = current_time();
-        $query = "SELECT isbn, asking_price, value, userID, end_time
+        $query = "SELECT auction.auctionID, isbn, asking_price, value, userID, end_time
 				FROM (auction JOIN bid
 				ON auction.auctionID = bid.auctionID)
                 WHERE bid.buyerID = ?
@@ -107,7 +99,7 @@
     }
     function get_current_aucs(){
         $current_time = current_time();
-        $query = "SELECT isbn, asking_price, starting_price, end_time
+        $query = "SELECT auction.auctionID, isbn, asking_price, starting_price, end_time
                 FROM auction
                 WHERE auction.userID = ?
                 AND auction.end_time > ?";
@@ -122,7 +114,7 @@
 
     function get_past_aucs(){
         $current_time = current_time();
-        $query = "SELECT isbn, asking_price, starting_price, end_time
+        $query = "SELECT auction.auctionID, isbn, asking_price, starting_price, end_time
                 FROM auction
                 WHERE auction.userID = ?
                 AND auction.end_time <= ?";

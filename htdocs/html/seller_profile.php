@@ -11,6 +11,9 @@ session_start();
             window.username = '';
             $(document).ready(function() {
                 get_username();
+                $('#btnLogout').click(function() {
+                    logout();
+                });
             });
 
             function run() {
@@ -42,7 +45,7 @@ session_start();
                         },
                         function(data) {
                             console.log(data);
-                            if (data != 0) {
+                            if (JSON.parse(data)) {
                                 print_current_auctions(data);
                             }
                             else {
@@ -58,7 +61,7 @@ session_start();
                         },
                         function(data) {
                             console.log(data);
-                            if (data != 0) {
+                            if (JSON.parse(data)) {
                                 print_past_auctions(data);
                             }
                             else {
@@ -67,12 +70,26 @@ session_start();
                         })
             }
 
+            function logout() {
+                $.post("../php_calls/mail.php",
+                    {
+                        action: "logout",
+                    },
+                    function(data) {
+                        if (data == 1) {
+                            window.location.href = "http://localhost:8888/";
+                        }
+                })
+            }
 
         </script>
     </head>    
     <body>
         <form id="user"> Welcome! </form> <br>
-    	<h1>
+        <div id="logout">
+            <a href="#" id="btnLogout">Sign Out</a>
+        </div>
+        <h1>
     		<br> Current Auctions: <br>
     	</h1>
     	<form id="currAucs">

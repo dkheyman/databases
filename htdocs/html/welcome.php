@@ -3,8 +3,7 @@ session_start();
 ?>
 <html>
     <head>
-        <link rel="stylesheet" text="text/css" href="../css/profile.css">
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     <script type="text/javascript" language="javascript">
         $( document ).ready(function() {
             <?php

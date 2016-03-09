@@ -10,7 +10,10 @@ session_start();
 
             window.username = '';
             $(document).ready(function() {
-                 get_username();
+                get_username();
+                $('#btnLogout').click(function() {
+                    logout();
+                });
             });
 
             function run() {
@@ -44,11 +47,11 @@ session_start();
                         },
                         function(data) {
                             console.log(data);
-                            if (data != 0) {
+                            if (JSON.parse(data)) {
                                 print_current_bids(data);
                             }
                             else {
-                                document.getElementById('currBids').innerHTML = "No bids found. Try bidding on an item!";
+                                document.getElementById('currBids').innerHTML = data;
                             }
                         })
         	}
@@ -60,11 +63,11 @@ session_start();
                         },
                         function(data) {
                             console.log(data);
-                            if (data != 0) {
+                            if (JSON.parse(data)) {
                                 print_watches(data);
                             }
                             else {
-                                document.getElementById('watches').innerHTML = "No watches found. Add a watch to an auction to keep an eye on some choice items!";
+                                document.getElementById('watches').innerHTML = data;
                             }
                         })
         	}
@@ -76,37 +79,48 @@ session_start();
                         },
                         function(data) {
                             console.log(data);
-                            if (data != 0) {
+                            if (JSON.parse(data)) {
                                 print_past_bids(data);
-                                //document.getElementById('pastBids').innerHTML = data;
                             }
                             else {
-                                document.getElementById('pastBids').innerHTML = "No bids found. Try bidding on an item!";
+                                document.getElementById('pastBids').innerHTML = data;
                             }
                         })
-        	}
+            }
 
+            function logout() {
+                $.post("../php_calls/mail.php",
+                    {
+                        action: "logout",
+                    },
+                    function(data) {
+                        if (data == 1) {
+                            window.location.href = "http://localhost:8888/";
+                        }
+                })
+            }
 
         </script>
     </head>    
     <body>
         <form id="user"> Welcome! </form> <br>
+        <div id="logout">
+            <a href="#" id="btnLogout">Sign Out</a>
+        </div>
     	<h1>
     		<br> Current Bids: <br>
     	</h1>
     	<form id="currBids">
-
     	</form>
     	<h1>
     		<br> Watches: <br>
     	</h1>
-		<form id="watches" >
-
+		<form id="watches">
     	</form>
     	<h1>
     		<br> Past Bids: <br>
     	</h1>
     	<form id="pastBids">
-    	</form>
+        </form>
    	</body>
 </html>
