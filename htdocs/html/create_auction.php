@@ -59,7 +59,8 @@
 			 <h1>Create Auction</h>
 			 <h1 class="replacement"> </h1>
 			 <form id="replace" class="replacement" action="javascript:add_auction()" method="post">
-			 		 Books: <div id="book_list"></div><br>
+			 		 Select Book: <div id="book_list"></div><br>
+			 		 (Book not there? Click <a href="create_book.php"> here! </a>) <br>
 					 Starting Price:<input type="number" step="0.01" name="startPrice" id="startPrice" required><br>
 					 End Time:<input type="datetime-local" name="endTime" required>
 					 Description:<input type='text' name='description' id='my-text-box' value="" required/>

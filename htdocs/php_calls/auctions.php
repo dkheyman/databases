@@ -32,6 +32,23 @@ if(isset($_POST['action']) && !empty($_POST['action'])) {
                 echo 0;
             }
             break;
+        case "add_book":
+            if (isset($_POST['title']) && !empty($_POST['title']) &&
+                isset($_POST['isbn']) && !empty($_POST['isbn']) &&
+                isset($_POST['aFirst']) && !empty($_POST['aFirst']) &&
+                isset($_POST['aLast']) && !empty($_POST['aLast']) &&
+                isset($_POST['genre']) && !empty($_POST['genre']) &&
+                isset($_POST['publisher']) && !empty($_POST['publisher']) &&
+                isset($_POST['language']) && !empty($_POST['language']) &&
+                isset($_POST['date']) && !empty($_POST['date']) &&
+                isset($_POST['condition']) && !empty($_POST['condition']) &&
+                isset($_POST['binding']) && !empty($_POST['binding'])){
+
+                add_book();
+            } else {
+                echo 0;
+            }
+            break;
         default:
             echo "Wrong";
             break;
@@ -101,7 +118,6 @@ function add_auction() {
     for ($i = 0; $i < 32; $i++) {
         $aucID = $aucID . chr(rand(65,90));
     }
-    chr(rand(65,90))
     $query = "INSERT INTO `bookly`.`auction` (`auctionID`,
             `asking_price`, `starting_price`, `userID`,
             `isbn`, `start_time`, `end_time`, `description`)
@@ -109,6 +125,22 @@ function add_auction() {
     $args = ($aucID, $_POST['startPrice'], $_POST['startPrice'],
         $_POST['userID'], $_POST['isbn'], current_time,
         $_POST['endTime'], $_POST['description']);
+    $result = run_query($query, '', $args);
+    if ($result == 1)
+        echo 1;
+    else
+        echo 0;
+}
+function add_book() {
+    $query = "INSERT INTO book (title,
+            isbn, aFirst, aLast,
+            genre, publisher, language, date,
+            condition, binding /*TODO: image url*/)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    $args = ($aucID, $_POST['title'], $_POST['isbn'],
+        $_POST['aFirst'], $_POST['aLast'], $_POST['genre'],
+        $_POST['publisher'], $_POST['language'], $_POST['date'],
+        $_POST['condition'], $_POST['binding']) /*TODO: image url*/;
     $result = run_query($query, '', $args);
     if ($result == 1)
         echo 1;
