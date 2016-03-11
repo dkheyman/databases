@@ -165,3 +165,29 @@ function print_watches(results) {
     }
     document.getElementById('watches').appendChild(bid_div);
 }
+
+function print_books_with_radio(results) {
+    results = JSON.parse(results);
+    var book_div = document.createElement("div");
+    book_div.setAttribute("id", "book_list");
+    book_div.setAttribute("class", "Table");
+    for (i = 0; i < results.length; i++) {
+        var new_row = document.createElement("div");
+        new_row.setAttribute("class", "Row");
+        new_row.setAttribute("id", "row" + i);
+        var radio_btn = document.createElement("input");
+        radio_btn.setAttribute("type", "Radio");
+        radio_btn.setAttribute("name", "book_radio");
+        radio_btn.setAttribute("id", "book_radio" + i);
+        radio_btn.setAttribute("value", results[i][1]);
+        new_row.appendChild(elem);
+        for(j = 0; j < results[i].length; j++) {
+            var elem = document.createElement("td");
+            elem.setAttribute("class", "Cell");
+            elem.innerHTML = results[i][j];
+            new_row.appendChild(elem);
+        }
+        book_div.appendChild(new_row);
+    }
+    document.getElementById('book_list').appendChild(book_div);
+}

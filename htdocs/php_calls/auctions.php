@@ -17,6 +17,21 @@ if(isset($_POST['action']) && !empty($_POST['action'])) {
                 echo 0;
             }
             break;
+        case "get_all_books":
+            get_all_books();
+            break;
+        case "add_auction":
+            if (isset($_POST['userID']) && !empty($_POST['userID']) &&
+                isset($_POST['endTime']) && !empty($_POST['endTime']) &&
+                isset($_POST['startPrice']) && !empty($_POST['startPrice']) &&
+                isset($_POST['description']) && !empty($_POST['description']) &&
+                isset($_POST['isbn']) && !empty($_POST['isbn'])) {
+
+                add_auction();
+            } else {
+                echo 0;
+            }
+            break;
         default:
             echo "Wrong";
             break;
@@ -68,4 +83,36 @@ function get_all_auctions() {
     }
 }
 
+function get_all_books() {
+    $query = "SELECT *
+              FROM Book"
+    $args = array();
+    $result = run_query($query, '', $args);
+    if (is_array($result) && count($result) > 0) {
+        echo json_encode($result);
+    } else {
+        echo "No books found";
+    }
+}
+
+function add_auction() {
+    $current_time = current_time();
+    var $aucID = "";
+    for ($i = 0; $i < 32; $i++) {
+        $aucID = $aucID . chr(rand(65,90));
+    }
+    chr(rand(65,90))
+    $query = "INSERT INTO `bookly`.`auction` (`auctionID`,
+            `asking_price`, `starting_price`, `userID`,
+            `isbn`, `start_time`, `end_time`, `description`)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    $args = ($aucID, $_POST['startPrice'], $_POST['startPrice'],
+        $_POST['userID'], $_POST['isbn'], current_time,
+        $_POST['endTime'], $_POST['description']);
+    $result = run_query($query, '', $args);
+    if ($result == 1)
+        echo 1;
+    else
+        echo 0;
+}
 ?>
