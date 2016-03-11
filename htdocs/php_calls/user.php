@@ -99,8 +99,10 @@
     }
     function get_current_aucs(){
         $current_time = current_time();
-        $query = "SELECT auction.auctionID, isbn, asking_price, starting_price, end_time
-                FROM auction
+        $query = "SELECT Auction.auctionID, Auction.isbn, asking_price, starting_price, end_time,
+                title, aLast, aFirst, book_condition, genre, publisher, language, data
+                FROM (Auction JOIN Book
+                ON Auction.isbn = Book.isbn)
                 WHERE auction.userID = ?
                 AND auction.end_time > ?";
         $args = array($_SESSION['userID'], $current_time);

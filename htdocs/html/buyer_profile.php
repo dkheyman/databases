@@ -40,6 +40,7 @@ session_start();
         	}
             
             function get_current_bids() {
+                console.log(window.username);
                 $.post("../php_calls/user.php",
                         {
                             action: "get_current_bids",
@@ -55,11 +56,12 @@ session_start();
                             }
                         })
         	}
-        	function get_watches() {
+            function get_watches() {
+                console.log(window.username);
         		$.post("../php_calls/user.php",
                         {
                             action: "get_watches",
-                            userID: username,
+                            userID: window.username,
                         },
                         function(data) {
                             console.log(data);
@@ -94,8 +96,11 @@ session_start();
                         action: "logout",
                     },
                     function(data) {
+                        console.log(data);
                         if (data == 1) {
                             window.location.href = "http://localhost:8888/";
+                        } else {
+                            document.getElementById('messages').innerHTML = data;
                         }
                 })
             }
@@ -121,6 +126,8 @@ session_start();
     		<br> Past Bids: <br>
     	</h1>
     	<form id="pastBids">
+        </form>
+        <form id="messages">
         </form>
    	</body>
 </html>

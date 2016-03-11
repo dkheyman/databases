@@ -39,18 +39,18 @@ session_start();
                 })
         }
 
-        function submit_bid() {
+        function submit_watch() {
             $.post("../php_calls/bid_watch.php",
                 {
-                    action: "add_bid",
+                    action: "add_watch",
                     buyerID: window.username,
                     auctionID: window.auction,
-                    value: $("#value").val(),
                     password: $("#password").val(),
                 },
                 function(data) {
+                    console.log(data);
                     if (data == 1) {
-                        document.getElementById('message').innerHTML = "Bid added!";
+                        document.getElementById('message').innerHTML = "Successfuly Added Watch!";
                         window.location.href = "auction.php?auction_id=" + window.auction;
                     } else {
                         document.getElementById('message').innerHTML = data;
@@ -61,10 +61,9 @@ session_start();
         </script>
     </head>
     <body>
-        <h1 class="replacement">Please Fill Out Your Bid</h1>
-        <form id="replace" class="replacement" action="javascript:submit_bid()" method="post">
+        <h1 class="replacement">Please Validate Your Watch</h1>
+        <form id="replace" class="replacement" action="javascript:submit_watch()" method="post">
             Your Password: <input type="password" name="password" id="password" required><br><br>
-            Bid Value: <input type="number" step="0.01" name="value" id="value" required><br><br>
             <input id="submit_btn" type="submit">
         </form>
         <form id="message"></form>

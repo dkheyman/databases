@@ -47,11 +47,23 @@
                 var link = "bid.php?auction_id=" + window.auction;
                 window.location.href = link;
             }
+
+            function redirect_to_watch() {
+                var link = "watch.php?auction_id=" + window.auction;
+                window.location.href = link;
+            }
+
+            function redirect_to_auction_list() {
+                var link = "browse.php";
+                window.location.href = link;
+            }
                             
             </script>
         </head>
         <body>
+            <a href="javascript:redirect_to_auction_list()" id="auction_btn">Auction List</a><br/>
             <a href="javascript:redirect_to_bid()" id="bid_btn">Bid Form</a><br/>
+            <a href="javascript:redirect_to_watch()" id="watch_btn">Watch Form</a><br/>
             <form id="user_auctions"></form>
             <form id="message"></form>
         </body>

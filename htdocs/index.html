@@ -18,21 +18,22 @@ session_start();
         </script>
     </head>
     <body>
-        <div class="content">
-        <div id="logo">
-            <img src="images/logo.jpeg" height="120" width="326" align="middle">
-        </div>    
-        <div id="title">
+
+        <header id="title">
+        <div>
             Welcome to Bookly!
             <h1>(a website for true book worms)</h1>
         </div>
-        <div id="links">
+        </header>
+        <nav id="links">
+        <div>
             <ul>
                 <li><a href="html/register.php">First-Time Users</a></li>
                 <li><a href="html/login.php">Returning Users</a></li>
             </ul>
         </div>
-        <div id="slideshow">
+        </nav>
+        <section id="slideshow">
             <div>
             <img src="images/library_1.jpeg" height="400" width="600">
             </div>
@@ -51,7 +52,11 @@ session_start();
             <div>
             <img src="images/library_6.jpeg" height="400" width="600">
             </div>
+        </section>
+        <footer id="logo">
+        <div>
+            <img src="images/logo.jpeg" height="120" width="326" align="middle">
         </div>
-        </div>
+        </footer>
     </body>
 </html>
