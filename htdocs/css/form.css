@@ -1,3 +1,6 @@
+h1, h2, h3, h4, h5, h6 {
+    text-align: center;
+}
 .replacement {
     margin-left:auto;
     margin-right:auto;
@@ -13,7 +16,7 @@
 }
 
 .replacement h1 {
-    font: 24px "Trebuchet MS", Arial, Helvetica, sans-serif;
+    font: 40px "Trebuchet MS", Arial, Helvetica, sans-serif;
     padding: 20px 0px 20px 40px;
     display: block;
     margin: -30px -30px 10px -30px;
