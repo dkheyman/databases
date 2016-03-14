@@ -17,6 +17,7 @@ session_start();
             });
 
             function run() {
+                get_recommendations();
                 get_current_bids();
                 get_watches();
                 get_past_bids();
@@ -38,6 +39,22 @@ session_start();
                             }
                         })
         	}
+            function get_recommendations() {
+                $.post"../php_calls/user.php",
+                        {
+                            action: "get_recommendations",
+                            userID: window.username,
+                        },
+                        function(data) {
+                            console.log(data);
+                            if (JSON.parse(data)) {
+                                print_recommended(data);
+                            }
+                            else {
+                                document.getElementById('recommended').innerHTML = data;
+                            }
+                        })
+            }
             
             function get_current_bids() {
                 console.log(window.username);
@@ -112,6 +129,11 @@ session_start();
         <div id="logout">
             <a href="#" id="btnLogout">Sign Out</a>
         </div>
+        <h1>
+            <br> Recommended for You: <br>
+        </h1>
+        <form id="recommended">
+        </form>
     	<h1>
     		<br> Current Bids: <br>
     	</h1>
