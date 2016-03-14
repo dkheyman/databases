@@ -24,10 +24,19 @@ session_start();
             });
 
             function run() {
+                hide_links();
                 get_current_aucs();
                 get_past_aucs();
             }
-
+            
+            function hide_links() {
+                if (window.userType == "Seller") {
+                    $("#review_btn").hide();
+                } else {
+                    $("#create_btn").hide();
+                }
+            }
+            
             function get_username() {
                 var params = window.location.search.substring(1);
                 window.username = params.split('=')[1];
@@ -117,6 +126,9 @@ session_start();
         </div>
         <div id="create">
             <a href="create_auction.php" id="create_btn">Create New Auction</a>
+        </div>
+        <div id="review">
+            <a href="#" id="review_btn">Review Seller</a>
         </div>
         <h1>
     		<br> Current Auctions: <br>

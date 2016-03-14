@@ -16,6 +16,7 @@ session_start();
 
             window.username = '';
             window.viewerRole = '';
+            window.userType = '';
             $(document).ready(function() {
                 get_username();
                 $('#btnLogout').click(function() {
@@ -24,27 +25,45 @@ session_start();
             });
 
             function run() {
+                hide_links();
                 get_recommendations();
                 get_current_bids();
                 get_watches();
                 get_past_bids();
             }
 
+            function hide_links() {
+                if (window.userType == "Buyer") {
+                    $("#review_btn").hide();
+                } else {
+                    $("#auction_btn").hide();
+                }
+            }
+
             function get_username() {
-        		$.post("../php_calls/user.php",
-                        {
-                            action: "get_user",
-                        },
-                        function(data) {
-                            if (data != 0) {
-                                window.username = data;
-                                document.getElementById('user').innerHTML = "Welcome " + window.username + "!";
-                                run();
-                            }
-                            else {
-                                alert("Unable to find profile!");
-                            }
-                        })
+                var params = window.location.search.substring(1);
+                window.username = params.split('=')[1];
+                console.log(window.username);
+                if (window.username == '' || window.username == null) {
+                    window.userType = "Buyer";
+                    $.post("../php_calls/user.php",
+                            {
+                                action: "get_user",
+                            },
+                            function(data) {
+                                if (data != 0) {
+                                    window.username = data;
+                                    document.getElementById('user').innerHTML = "Welcome " + window.username + "!";
+                                    run();
+                                }
+                                else {
+                                    alert("Unable to find profile!");
+                                }
+                            })
+                } else {
+                    window.userType = "Seller";
+                    run();
+                }
         	}
             
             function get_recommendations() {
@@ -150,9 +169,14 @@ session_start();
     </head>    
     <body>
         <form id="user"> Welcome! </form> <br>
-        <div id="links">
+        <div id="logout">
             <a href="#" id="btnLogout">Sign Out</a><br>
+        </div>
+        <div id="browse">
             <a href="browse.php" id="auction_btn">Auction List</a>
+        </div>
+        <div id="review">
+            <a href="#" id="review_btn">Review Buyer</a>
         </div>
         <h1>
             <br> Recommended for You: <br>
