@@ -126,7 +126,7 @@
     }
     function get_current_aucs(){
         $current_time = current_time();
-        $query = "SELECT Auction.auctionID, Auction.isbn, asking_price, starting_price, end_time,
+        $query = "SELECT Auction.auctionID, Auction.userID, Auction.isbn, asking_price, starting_price, end_time,
                 title, aLast, aFirst, book_condition, genre, publisher, language, data
                 FROM (Auction JOIN Book
                 ON Auction.isbn = Book.isbn)
@@ -143,7 +143,7 @@
 
     function get_past_aucs(){
         $current_time = current_time();
-        $query = "SELECT auction.auctionID, isbn, asking_price, starting_price, end_time
+        $query = "SELECT auction.auctionID, Auction.userID, isbn, asking_price, starting_price, end_time
                 FROM auction
                 WHERE auction.userID = ?
                 AND auction.end_time <= ?";

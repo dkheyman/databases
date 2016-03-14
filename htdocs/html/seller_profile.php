@@ -9,6 +9,7 @@ session_start();
         <script type="text/javascript" language="javascript">
 
             window.username = '';
+            window.userType = '';
             $(document).ready(function() {
                 get_username();
                 $('#btnLogout').click(function() {
@@ -22,7 +23,13 @@ session_start();
             }
 
             function get_username() {
-        		$.post("../php_calls/user.php",
+                console.log(window.location.search.substring(1));
+                var params = window.location.search.substring(1);
+                window.auction = params.split('=')[1];
+                console.log(window.auction);
+                if (window.auction == "" || window.auction == null) {
+                    window.userType = "Seller";
+        		    $.post("../php_calls/user.php",
                         {
                             action: "get_user",
                         },
@@ -35,7 +42,11 @@ session_start();
                             else {
                                 alert("Unable to find profile!");
                             }
-                        })
+                  })}
+                else {
+                  window.userType = "Buyer";
+                  run();
+                }
         	}
         	function get_current_aucs() {
         		$.post("../php_calls/user.php",

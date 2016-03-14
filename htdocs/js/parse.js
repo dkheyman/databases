@@ -33,7 +33,11 @@ function print_current_bids(results) {
         for(j = 1; j < results[i].length; j++) {
             var elem = document.createElement("td");
             elem.setAttribute("class", "Cell");
-            if (j == 2 || j == 3) {
+            if (j == 4) {
+                var addr = "seller_profile.php?seller_id=" + encodeURIComponent(results[i][4]);
+                var inner = "<a href=" + addr + ">" + results[i][4] + "</a>";
+                elem.innerHTML = inner;
+            } if (j == 2 || j == 3) {
                 results[i][j] = '$' + results[i][j];
             }
             if (j == 1) {
@@ -62,7 +66,11 @@ function print_past_bids(results) {
         for(j = 1; j < results[i].length; j++) {
             var elem = document.createElement("td");
             elem.setAttribute("class", "Cell");
-            if (j == 2 || j == 3) {
+            if (j == 4) {
+                var addr = "seller_profile.php?seller_id=" + encodeURIComponent(results[i][4]);
+                var inner = "<a href=" + addr + ">" + results[i][4] + "</a>";
+                elem.innerHTML = inner;
+            } if (j == 2 || j == 3) {
                 results[i][j] = '$' + results[i][j];
             }
             if (j == 1) {
@@ -91,7 +99,11 @@ function print_recommended(results) {
         for(j = 1; j < results[i].length; j++) {
             var elem = document.createElement("td");
             elem.setAttribute("class", "Cell");
-            if (j == 2 || j == 3) {
+            if (j == 4) {
+                var addr = "seller_profile.php?seller_id=" + encodeURIComponent(results[i][4]);
+                var inner = "<a href=" + addr + ">" + results[i][4] + "</a>";
+                elem.innerHTML = inner;
+            } if (j == 2 || j == 3) {
                 results[i][j] = '$' + results[i][j];
             }
             if (j == 1) {
@@ -178,7 +190,11 @@ function print_watches(results) {
         for(j = 1; j < results[i].length; j++) {
             var elem = document.createElement("td");
             elem.setAttribute("class", "Cell");
-            if (j == 2 || j == 3) {
+            if (j == 4) {
+                var addr = "seller_profile.php?seller_id=" + encodeURIComponent(results[i][4]);
+                var inner = "<a href=" + addr + ">" + results[i][4] + "</a>";
+                elem.innerHTML = inner;
+            } if (j == 2 || j == 3) {
                 results[i][j] = '$' + results[i][j];
             }
             if (j == 1) {

@@ -3,12 +3,19 @@ session_start();
 ?>
 <html>
     <head>
+        <meta charset="uft-8">
+        <title>Bookly- Profile</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+        <!-- Optional Bootstrap theme -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css">
         <link rel="stylesheet" type="text/css" href="../css/table.css">
         <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
         <script type="text/javascript" language="javascript" src="../js/parse.js"></script>
         <script type="text/javascript" language="javascript">
 
             window.username = '';
+            window.viewerRole = '';
             $(document).ready(function() {
                 get_username();
                 $('#btnLogout').click(function() {
@@ -151,5 +158,10 @@ session_start();
         </form>
         <form id="messages">
         </form>
+
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
    	</body>
 </html>
