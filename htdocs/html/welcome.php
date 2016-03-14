@@ -4,6 +4,7 @@ session_start();
 <html>
     <head>
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script type="text/javascript" language="javascript" src="../js/login.js"></script>
     <script type="text/javascript" language="javascript">
         $( document ).ready(function() {
             <?php
@@ -35,18 +36,7 @@ session_start();
                     }    
                 })
         }
-        
-        function logout() {
-            $.post("../php_calls/mail.php",
-                {
-                    action: "logout",
-                },
-            function(data) {
-                if (data == 1) {
-                    window.location.href ="http://localhost:8888/"; 
-                }
-            })
-        }
+    
     </script>
     </head>
     <body>

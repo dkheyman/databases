@@ -22,9 +22,12 @@
 										if (data != 0) {
 												window.username = data;
 										}
-										else {}
+                                        else {
+                                            document.getElementById('message').innerHTML = "No profile matched!";
+                                        }
 									})
-						}
+                        }
+
 						function get_all_books() {
 								$.post("../php_calls/auctions.php",
 								{
@@ -33,36 +36,43 @@
 								function(data){
 									if (data != 0) {
 										print_books_with_radio(data);
-									} else {}
+                                    } else {
+                                        document.GetElementById('message').innerHTML = "No books found!";
+                                    }
 								})
-						}
-						function add_auction() {
+                        }
+
+                        function add_auction() {
+                                var isbn = document.getElementById('book').value; 
 								$.post("../php_calls/auctions.php", 
 										{
 												action: "add_auction",
 												userID: window.username,
-												startPrice: $("#startPrice").val();
-												description: $("#description").val();
-												endTime: $("endTime").val();
-												isbn: $('input:radio[name=book_radio]:checked').val(),
+												startPrice: $("#startPrice").val(),
+												description: $("#description").val(),
+												endTime: $("#endTime").val(),
+												isbn: isbn,
 										},
 								function(data) {
-										if (data == 1) {
+                                    console.log(data);
+                                    if (data.length == 32 ) {
+                                           window.location.href = "auction.php?auction_id=" + data;
 										} else {
-											console.log("An error occurred");
+											document.getElementById('message').innerHTML = data;
 										}
 								})
 						}
 				</script>
 	 </head>
 	 <body>
-			 <h1>Create Auction</h>
-			 <h1 class="replacement"> </h1>
+            <form id="message">
+            </form>
+			 <h1 class="replacement"> Create Your Auction </h1>
 			 <form id="replace" class="replacement" action="javascript:add_auction()" method="post">
 			 		 Books: <div id="book_list"></div><br>
 					 Starting Price:<input type="number" step="0.01" name="startPrice" id="startPrice" required><br>
-					 End Time:<input type="datetime-local" name="endTime" required>
-					 Description:<input type='text' name='description' id='my-text-box' value="" required/>
+					 End Time:<input type="datetime-local" id="endTime" name="endTime" required><br>
+					 Description:<input type="text" name="description" id="description" value="" required><br>
 					 <input id="add_button" type="submit">
 			 </form>
 	 </body>

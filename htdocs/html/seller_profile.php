@@ -3,6 +3,12 @@ session_start();
 ?>
 <html>
     <head>
+        <meta charset="uft-8">
+        <title>Bookly- Profile</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+        <!-- Optional Bootstrap theme -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css">
         <link rel="stylesheet" type="text/css" href="../css/table.css">
         <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
         <script type="text/javascript" language="javascript" src="../js/parse.js"></script>
@@ -23,13 +29,12 @@ session_start();
             }
 
             function get_username() {
-                console.log(window.location.search.substring(1));
                 var params = window.location.search.substring(1);
-                window.auction = params.split('=')[1];
-                console.log(window.auction);
-                if (window.auction == "" || window.auction == null) {
+                window.username = params.split('=')[1];
+                console.log(window.username);
+                if (window.username == "" || window.username == null) {
                     window.userType = "Seller";
-        		    $.post("../php_calls/user.php",
+                    $.post("../php_calls/user.php",
                         {
                             action: "get_user",
                         },
@@ -42,10 +47,10 @@ session_start();
                             else {
                                 alert("Unable to find profile!");
                             }
-                  })}
-                else {
-                  window.userType = "Buyer";
-                  run();
+                        })
+                } else {
+                    window.userType = "Buyer";
+                    run();
                 }
         	}
         	function get_current_aucs() {
@@ -56,11 +61,15 @@ session_start();
                         },
                         function(data) {
                             console.log(data);
-                            if (JSON.parse(data)) {
+                            if (data != "No current auctions") {
                                 print_current_auctions(data);
                             }
                             else {
-                                document.getElementById('currAucs').innerHTML = "No auctions found. Try creating an auction!";
+                                if (data == "No current auctions") {
+                                    document.getElementById('currAucs').innerHTML = "No auctions found. Try creating an auction!";
+                                } else {
+                                    document.getElementById('currAucs').innerHTML = data;
+                                }
                             }
                         })
         	}
@@ -72,11 +81,15 @@ session_start();
                         },
                         function(data) {
                             console.log(data);
-                            if (JSON.parse(data)) {
+                            if (data != "No past auctions") {
                                 print_past_auctions(data);
                             }
                             else {
-                                document.getElementById('pastAucs').innerHTML = "No auctions found. Try creating an auction!";
+                                if (data == "No past auctions") {
+                                    document.getElementById('pastAucs').innerHTML = "No auctions found. Try creating an auction!";
+                                } else {
+                                    document.getElementById('pastAucs').innerHTML = data;
+                                }
                             }
                         })
             }
@@ -87,18 +100,23 @@ session_start();
                         action: "logout",
                     },
                     function(data) {
+                        console.log(data);
                         if (data == 1) {
                             window.location.href = "http://localhost:8888/";
+                        } else {
+                            document.getElementById('messages').innerHTML = data;
                         }
                 })
-            }
-
+        }
         </script>
     </head>    
     <body>
         <form id="user"> Welcome! </form> <br>
         <div id="logout">
             <a href="#" id="btnLogout">Sign Out</a>
+        </div>
+        <div id="create">
+            <a href="create_auction.php" id="create_btn">Create New Auction</a>
         </div>
         <h1>
     		<br> Current Auctions: <br>

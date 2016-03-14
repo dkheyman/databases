@@ -5,12 +5,16 @@
         $con = connect_to_db("bookly");
         $query = mysqli_prepare($con, $query);
         if ($query) {
-            $result = call_user_func_array('mysqli_stmt_bind_param', array_merge(array($query, $types), refValues($args)));
+            if (count($args) > 0) {
+                $result = call_user_func_array('mysqli_stmt_bind_param', array_merge(array($query, $types), refValues($args)));
+            }
             mysqli_execute($query);
             $result = mysqli_stmt_get_result($query);
             if ($result) {
-                mysqli_close($con);
                 $rows = mysqli_fetch_all($result);
+                mysqli_stmt_free_result($query);
+                mysqli_stmt_close($query);
+                mysqli_close($con);
                 return $rows;
             } else {
                 $error = mysqli_error($con);

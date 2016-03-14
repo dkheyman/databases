@@ -69,7 +69,7 @@
                 AND auction.auctionID NOT IN (SELECT auction.auctionID 
                     FROM (auction JOIN bid ON auction.auctionID = bid.auctionID) WHERE bid.buyerID = ?)
                 AND aution.end_time > ?";
-        $args = array($_SESSION['userID'], $_SESSION['userID'], $_SESSION['userID'], $current_time);
+        $args = array($_POST['userID'], $_POST['userID'], $_POST['userID'], $current_time);
         $result = run_query($query, 'ssss', $args);
         if (is_array($result) && count($result) > 0) {
             echo json_encode($result);
@@ -85,7 +85,7 @@
 				ON auction.auctionID = bid.auctionID)
 				WHERE bid.buyerID = ?
                 AND auction.end_time > ?";
-        $args = array($_SESSION['userID'], $current_time);
+        $args = array($_POST['userID'], $current_time);
         $result = run_query($query, 'ss', $args);
         if (is_array($result) && count($result) > 0) {
             echo json_encode($result);
@@ -100,7 +100,7 @@
 				ON auction.auctionID = watch.auctionID)
 				WHERE watch.buyerID = ?
                 AND auction.end_time > ?";
-        $args = array($_SESSION['userID'], $current_time);
+        $args = array($_POST['userID'], $current_time);
         $result = run_query($query, 'ss', $args);
         if (is_array($result) && count($result) > 0) {
             echo json_encode($result);
@@ -116,7 +116,7 @@
 				ON auction.auctionID = bid.auctionID)
                 WHERE bid.buyerID = ?
                 AND auction.end_time <= ?";
-        $args = array($_SESSION['userID'], $current_time);
+        $args = array($_POST['userID'], $current_time);
         $result = run_query($query, 'ss', $args);
         if (is_array($result) && count($result) > 0) {
             echo json_encode($result);
@@ -126,13 +126,13 @@
     }
     function get_current_aucs(){
         $current_time = current_time();
-        $query = "SELECT Auction.auctionID, Auction.userID, Auction.isbn, asking_price, starting_price, end_time,
-                title, aLast, aFirst, book_condition, genre, publisher, language, data
+        $query = "SELECT Auction.auctionID, Auction.isbn, asking_price, starting_price, end_time,
+                title, aLast, aFirst, book_condition, genre, publisher, language, date
                 FROM (Auction JOIN Book
                 ON Auction.isbn = Book.isbn)
                 WHERE auction.userID = ?
                 AND auction.end_time > ?";
-        $args = array($_SESSION['userID'], $current_time);
+        $args = array($_POST['userID'], $current_time);
         $result = run_query($query, 'ss', $args);
         if (is_array($result) && count($result) > 0) {
             echo json_encode($result);
@@ -143,11 +143,13 @@
 
     function get_past_aucs(){
         $current_time = current_time();
-        $query = "SELECT auction.auctionID, Auction.userID, isbn, asking_price, starting_price, end_time
-                FROM auction
+        $query = "SELECT Auction.auctionID, Auction.isbn, asking_price, starting_price, end_time,
+            title, aLast, aFirst, book_condition, genre, publisher, language, date
+                FROM (Auction join Book
+                ON Auction.isbn = Book.isbn)
                 WHERE auction.userID = ?
                 AND auction.end_time <= ?";
-        $args = array($_SESSION['userID'], $current_time);
+        $args = array($_POST['userID'], $current_time);
         $result = run_query($query, 'ss', $args);
         if (is_array($result) && count($result) > 0) {
             echo json_encode($result);

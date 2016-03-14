@@ -46,23 +46,28 @@ session_start();
                             }
                         })
         	}
+            
             function get_recommendations() {
-                $.post"../php_calls/user.php",
+                $.post("../php_calls/user.php",
                         {
                             action: "get_recommendations",
                             userID: window.username,
                         },
                         function(data) {
                             console.log(data);
-                            if (JSON.parse(data)) {
+                            if (data != 'No Recommendations') {
                                 print_recommended(data);
                             }
                             else {
-                                document.getElementById('recommended').innerHTML = data;
+                                if (data == 'No Recommendations') {
+                                    document.getElementById('recommended').innerHTML = "Nothing to recommend to you as of yet!";
+                                } else {
+                                    document.getElementById('recommended').innerHTML = data;
+                                }
                             }
                         })
             }
-            
+ 
             function get_current_bids() {
                 console.log(window.username);
                 $.post("../php_calls/user.php",
@@ -72,11 +77,15 @@ session_start();
                         },
                         function(data) {
                             console.log(data);
-                            if (JSON.parse(data)) {
+                            if (data != "No Current Bids") {
                                 print_current_bids(data);
                             }
                             else {
-                                document.getElementById('currBids').innerHTML = data;
+                                if (data == "No Current Bids") {
+                                    document.getElementById('currBids').innerHTML = "You have not bid on anything yet!";
+                                } else {
+                                    document.getElementById('currBids').innerHTML = data;
+                                }    
                             }
                         })
         	}
@@ -89,11 +98,15 @@ session_start();
                         },
                         function(data) {
                             console.log(data);
-                            if (JSON.parse(data)) {
+                            if (data != "No current watches") {
                                 print_watches(data);
                             }
                             else {
-                                document.getElementById('watches').innerHTML = data;
+                                if (data == 'No current watches') {
+                                    document.getElementById('watches').innerHTML = "You have not put a watch on anything yet!";
+                                } else {
+                                    document.getElementById('watches').innerHTML = data;
+                                }
                             }
                         })
         	}
@@ -105,11 +118,15 @@ session_start();
                         },
                         function(data) {
                             console.log(data);
-                            if (JSON.parse(data)) {
+                            if (data != 'No past bids') {
                                 print_past_bids(data);
                             }
                             else {
-                                document.getElementById('pastBids').innerHTML = data;
+                                if (data == 'No past bids') {
+                                    document.getElementById('pastBids').innerHTML = "You do not have any past bids!";
+                                } else {
+                                    document.getElementById('pastBids').innerHTML = data;
+                                }    
                             }
                         })
             }
@@ -133,13 +150,14 @@ session_start();
     </head>    
     <body>
         <form id="user"> Welcome! </form> <br>
-        <div id="logout">
-            <a href="#" id="btnLogout">Sign Out</a>
+        <div id="links">
+            <a href="#" id="btnLogout">Sign Out</a><br>
+            <a href="browse.php" id="auction_btn">Auction List</a>
         </div>
         <h1>
             <br> Recommended for You: <br>
         </h1>
-        <form id="recommended">
+`       <form id="recommended">
         </form>
     	<h1>
     		<br> Current Bids: <br>
@@ -158,10 +176,5 @@ session_start();
         </form>
         <form id="messages">
         </form>
-
-
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
    	</body>
 </html>

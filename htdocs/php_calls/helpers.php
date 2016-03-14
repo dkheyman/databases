@@ -85,7 +85,7 @@
     
     function get_auction($aucID) {
     $query = "SELECT asking_price, Auction.isbn, end_time, title,
-                aLast, aFirst, book_condition, genre, publisher, language, date 
+                aLast, aFirst, book_condition, genre, publisher, language, date, Auction.userID 
                 FROM (Auction JOIN Book
                 ON Auction.isbn = Book.isbn)
                 WHERE Auction.auctionID = ?";

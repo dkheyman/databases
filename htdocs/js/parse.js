@@ -13,7 +13,13 @@ function print_users_auctions(results) {
             if (j == 0) {
                 results[i][j] = '$' + results[i][j];
             }
-            elem.innerHTML = results[i][j];
+            if (j == results[i].length - 1) {
+                var addr = "seller_profile.php?seller_id=" + encodeURIComponent(results[i][0]);
+                var inner = "<a href=" + addr + ">" + results[i][j] + "</a>";
+                elem.innerHTML = inner;
+            } else {
+                elem.innerHTML = results[i][j];
+            }
             new_row.appendChild(elem);
         }
         bid_div.appendChild(new_row);
@@ -37,15 +43,18 @@ function print_current_bids(results) {
                 var addr = "seller_profile.php?seller_id=" + encodeURIComponent(results[i][4]);
                 var inner = "<a href=" + addr + ">" + results[i][4] + "</a>";
                 elem.innerHTML = inner;
-            } if (j == 2 || j == 3) {
-                results[i][j] = '$' + results[i][j];
-            }
-            if (j == 1) {
-                var addr = "auction.php?auction_id=" + encodeURIComponent(results[i][0]);
-                var inner = "<a href=" + addr + ">" + results[i][j] + "</a>";
-                elem.innerHTML = inner;
+                console.log(elem);
             } else {
-                elem.innerHTML = results[i][j];
+                if (j == 2 || j == 3) {
+                    results[i][j] = '$' + results[i][j];
+                }
+                if (j == 1) {
+                    var addr = "auction.php?auction_id=" + encodeURIComponent(results[i][0]);
+                    var inner = "<a href=" + addr + ">" + results[i][j] + "</a>";
+                    elem.innerHTML = inner;
+                } else {
+                    elem.innerHTML = results[i][j];
+                }
             }
             new_row.appendChild(elem);
         }
@@ -70,15 +79,17 @@ function print_past_bids(results) {
                 var addr = "seller_profile.php?seller_id=" + encodeURIComponent(results[i][4]);
                 var inner = "<a href=" + addr + ">" + results[i][4] + "</a>";
                 elem.innerHTML = inner;
-            } if (j == 2 || j == 3) {
-                results[i][j] = '$' + results[i][j];
-            }
-            if (j == 1) {
-                var addr = "auction.php?auction_id=" + results[i][0];
-                var inner = "<a href=" + addr + ">" + results[i][j] + "</a>";
-                elem.innerHTML = inner;
             } else {
-                elem.innerHTML = results[i][j];
+                if (j == 2 || j == 3) {
+                    results[i][j] = '$' + results[i][j];
+                }
+                if (j == 1) {
+                    var addr = "auction.php?auction_id=" + results[i][0];
+                    var inner = "<a href=" + addr + ">" + results[i][j] + "</a>";
+                    elem.innerHTML = inner;
+                } else {
+                    elem.innerHTML = results[i][j];
+                }
             }
             new_row.appendChild(elem);
         }
@@ -194,15 +205,17 @@ function print_watches(results) {
                 var addr = "seller_profile.php?seller_id=" + encodeURIComponent(results[i][4]);
                 var inner = "<a href=" + addr + ">" + results[i][4] + "</a>";
                 elem.innerHTML = inner;
-            } if (j == 2 || j == 3) {
-                results[i][j] = '$' + results[i][j];
-            }
-            if (j == 1) {
-                var addr = "auction.php?auction_id=" + results[i][0];
-                var inner = "<a href=" + addr + ">" + results[i][j] + "</a>";
-                elem.innerHTML = inner;
             } else {
-                elem.innerHTML = results[i][j];
+                if (j == 2 || j == 3) {
+                    results[i][j] = '$' + results[i][j];
+                }
+                if (j == 1) {
+                    var addr = "auction.php?auction_id=" + results[i][0];
+                    var inner = "<a href=" + addr + ">" + results[i][j] + "</a>";
+                    elem.innerHTML = inner;
+                } else {
+                    elem.innerHTML = results[i][j];
+                }
             }
             new_row.appendChild(elem);
         }
@@ -213,26 +226,16 @@ function print_watches(results) {
 
 function print_books_with_radio(results) {
     results = JSON.parse(results);
-    var book_div = document.createElement("div");
-    book_div.setAttribute("id", "book_list");
-    book_div.setAttribute("class", "Table");
-    for (i = 0; i < results.length; i++) {
-        var new_row = document.createElement("div");
-        new_row.setAttribute("class", "Row");
-        new_row.setAttribute("id", "row" + i);
-        var radio_btn = document.createElement("input");
-        radio_btn.setAttribute("type", "Radio");
-        radio_btn.setAttribute("name", "book_radio");
-        radio_btn.setAttribute("id", "book_radio" + i);
-        radio_btn.setAttribute("value", results[i][1]);
-        new_row.appendChild(elem);
-        for(j = 0; j < results[i].length; j++) {
-            var elem = document.createElement("td");
-            elem.setAttribute("class", "Cell");
-            elem.innerHTML = results[i][j];
-            new_row.appendChild(elem);
-        }
-        book_div.appendChild(new_row);
+    var book_div = document.createElement("select");
+    book_div.setAttribute("id", "book_name");
+    book_div.setAttribute("class", "Row");
+    for(j = 0; j < results[0].length; j++) {
+        var book = document.createElement("option");
+        book.setAttribute("name", "book" + j);
+        book.setAttribute("id", "book");
+        book.setAttribute("value", results[j][1]);
+        book.innerHTML = "ISBN: " + results[j][1] + "\t\tTitle: " + results[j][0];
+        book_div.appendChild(book);
     }
     document.getElementById('book_list').appendChild(book_div);
 }
@@ -241,15 +244,21 @@ function print_genres(results) {
     results = JSON.parse(results);
     var bid_div = document.createElement("div");
     bid_div.setAttribute("id", "genre_list");
-    bid_div.setAttribute("class", "Table");
     for (i = 0; i < results.length; i++) {
-        var new_row = document.createElement("div");
+        var new_row = document.createElement("tr");
         new_row.setAttribute("class", "Row");
         new_row.setAttribute("id", "row" + i);
-        var elem = document.createElement("td");
-        elem.setAttribute("class", "Cell");
-        elem.innerHTML = "<a href=\"" + window.location.href + "?genre=" + results[i][0] + "\">" + results[i][0] + "</a>";
+        var elem = document.createElement("input");
+        elem.setAttribute("type", "radio");
+        elem.setAttribute("name", "genre");
+        elem.setAttribute("id", "genre");
+        elem.setAttribute("value", results[i][0]);
+        elem.setAttribute("onClick", "javascript:update_browser()");
+        var trial = document.createElement("label");
+        trial.innerHTML = results[i][0];
+        trial.setAttribute("for", "genre");
         new_row.appendChild(elem);
+        new_row.appendChild(trial);
         bid_div.appendChild(new_row);
     }
     document.getElementById('genre_select').appendChild(bid_div);

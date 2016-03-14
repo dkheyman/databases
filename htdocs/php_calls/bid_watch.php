@@ -157,8 +157,8 @@
         $query = "UPDATE Auction SET asking_price=? where auctionID=?";
         $args = array($value, $auctionID);
         $results = execute_change($query, 'ds', $args);
-        if (is_string($result)) {
-            return;
+        if (is_string($results)) {
+            return 0;
         } else {
             return 1;
         }
