@@ -42,26 +42,24 @@ session_start();
                 var params = window.location.search.substring(1);
                 window.username = params.split('=')[1];
                 console.log(window.username);
-                if (window.username == "" || window.username == null) {
-                    window.userType = "Seller";
-                    $.post("../php_calls/user.php",
+                $.post("../php_calls/user.php",
                         {
                             action: "get_user",
                         },
                         function(data) {
-                            if (data != 0) {
+                            if (data != 0 && ((window.username == "" || window.username == null) || data ==  window.username) {
                             	window.username = data;
+                                window.userType = "Seller";
                                 document.getElementById('user').innerHTML = "Welcome " + window.username + "!";
+                                run();
+                            } else if (window.username != "" && window.user != null) {
+                                window.userType = "Buyer";
                                 run();
                             }
                             else {
                                 alert("Unable to find profile!");
                             }
                         })
-                } else {
-                    window.userType = "Buyer";
-                    run();
-                }
         	}
         	function get_current_aucs() {
         		$.post("../php_calls/user.php",
