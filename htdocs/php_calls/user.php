@@ -54,6 +54,14 @@
                     echo "User cannot be found";
                 }
                 break;
+            case "review":
+                if(isset($_POST['content']) && strlen($_POST['content']) > 0 &&
+                    isset($_POST['reviewee']) && strlen($_POST['reviewee']) > 0 &&
+                    isset($_POST['rating']) && strlen($_POST['rating']) > 0 &&
+                    isset($_SESSION['userID']) && strlen($_SESSION['userID']) > 0)
+                    review();
+                else
+                    echo "An error occurred!";
         	default:
                 echo "Wrong";
         }
@@ -153,6 +161,35 @@
         $result = run_query($query, 'ss', $args);
         if (is_array($result) && count($result) > 0) {
             echo json_encode($result);
+        } else {
+            echo "No past auctions";
+        }
+    }
+
+    function review() {
+        $query = "SELECT *
+                FROM reviews
+                WHERE reviews.reviewerID = ?
+                AND reviews.reviewedID = ?";
+        $args = array($_SESSION['userID'], $_POST['reviewee']);
+        $result = run_query($query, 'ss', $args);
+        if (is_array($result)) {
+            if (count($result) > 0)
+                echo "You have already reviewed this user!";
+            else
+                submit_review();
+        } else {
+            echo "An error occured!"
+        }
+    }
+
+    function submit_review() {
+        $query = "INSERT INTO reviews(reviewerID, reviewedID, review, rating)
+                    VALUES (?, ?, ?, ?)";
+        $args = array($_SESSION['userID'], $_POST['reviewee'], $_POST['content'], $_POST['rating']);
+        $result = run_query($query, 'ss', $args);
+         if (is_array($result) && count($result) > 0) {
+            echo 1;
         } else {
             echo "No past auctions";
         }
