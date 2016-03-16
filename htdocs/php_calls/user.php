@@ -62,6 +62,11 @@
                     review();
                 else
                     echo "An error occurred!";
+            case "get_rating":
+                if(isset($_POST['userID']) && strlen($_POST['userID'])) {
+                    get_rating();
+                } else
+                    echo 0;
         	default:
                 echo "Wrong";
         }
@@ -193,5 +198,17 @@
         } else {
             echo "No past auctions";
         }
+    }
+
+    function get_rating() {
+        $query = "SELECT AVG(rating)
+                FROM reviews
+                WHERE reviewedID =?";
+        $args = array($_POST['userID']);
+        $result = run_query($query, 's', $args);
+        if (is_array($result) && count($result) > 0) {
+            echo intval($result);
+        } else 
+            echo 0;
     }
 ?>

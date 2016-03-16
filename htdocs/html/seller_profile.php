@@ -26,6 +26,7 @@ session_start();
 
             function run() {
                 hide_links();
+                get_rating();
                 get_current_aucs();
                 get_past_aucs();
             }
@@ -61,6 +62,27 @@ session_start();
                             }
                         })
         	}
+            function get_rating() {
+                $.post("../php_calls/user.php",
+                        {
+                            action: "get_user_rating",
+                            userID: window.username,
+                        },
+                        function(data) {
+                            if (data != 0 && data <= 5) {
+                                var rating = data;
+                                document.getElementById('star_rating').innerHTML = username + "<br>";
+                                for (var i=0; i<5;i++) {
+                                    if (rating > 0) {
+                                        rating--;
+                                        document.getElementById('star_rating').innerHTML = document.getElementById('star_rating').innerHTML + "★";  
+                                    }  else {
+                                        document.getElementById('star_rating').innerHTML = document.getElementById('star_rating').innerHTML + "☆";
+                                    }
+                                }
+                            }
+                        })
+            }
         	function get_current_aucs() {
         		$.post("../php_calls/user.php",
                         {
@@ -162,6 +184,11 @@ session_start();
             <div class="row">
                 <div class="col-md-12">
                     <form id="user"> Welcome! </form> <br>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <h2 id="star_rating"></h2>
                 </div>
             </div>
             <div class="row">
