@@ -70,8 +70,8 @@
 		</div>
 		<div class="row">
 			<div class="col-md-12">
-			 <form id="addImage" class="replacement" action="javascript:add_book()" enctype="multipart/form-data" method="post">
-			 		Submit a Photo: <input type="file" name="bookimage" id="bookimage">
+			 <form id="addImage" class="replacement" action="javascript:add_image()" enctype="multipart/form-data" method="post">
+			 		Submit a Photo: <input type="file" name="imageFile" id="imageFile">
 			 		<input class="btn btn-primary btn-large center-block" id="add_image" type="submit">
 			 </form>
 		</div>

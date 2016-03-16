@@ -3,8 +3,15 @@ session_start();
 
     require 'db_functions.php';
     require 'helpers.php';
+    require 'upload.php';
 
+$imageFileName="";
+$DEFAULT_IMAGE_LOCATION="noimage.png";
 if(isset($_POST['action']) && !empty($_POST['action'])) {
+    if (isset($_FILES['imageFile']) && !empty($_FILES['imageFile']) {
+        $imageFileName = basename($_FILES["imageFile"]["name"]);
+        imageUpload();
+    }
 	$action = $_POST['action'];
 	switch($action) {
 		case "get_all_active_auctions":
@@ -44,7 +51,6 @@ if(isset($_POST['action']) && !empty($_POST['action'])) {
                 isset($_POST['date']) && !empty($_POST['date']) &&
                 isset($_POST['condition']) && !empty($_POST['condition']) &&
                 isset($_POST['binding']) && !empty($_POST['binding'])){
-
                 add_book();
             } else {
                 echo 0;
@@ -231,13 +237,17 @@ function add_book() {
     $query = "INSERT INTO book (title,
             isbn, aFirst, aLast,
             genre, publisher, language, date,
-            condition, binding /*TODO: image url*/)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            condition, binding, imageURL)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    if ($imageFileName != "")
+        $imageLoc = $imageFileName;
+    else
+        $imageLoc = $DEFAULT_IMAGE_LOCATION;
     $args = array($aucID, $_POST['title'], $_POST['isbn'],
         $_POST['aFirst'], $_POST['aLast'], $_POST['genre'],
         $_POST['publisher'], $_POST['language'], $_POST['date'],
-        $_POST['condition'], $_POST['binding']);
-    $result = run_query($query, 'ssssssssss', $args);
+        $_POST['condition'], $_POST['binding'], $imageLoc);
+    $result = run_query($query, 'sssssssssss', $args);
     if ($result == 1)
         echo 1;
     else
