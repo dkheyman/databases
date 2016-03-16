@@ -4,6 +4,13 @@
     require 'helpers.php';
 
     if(isset($_POST['action']) && !empty($_POST['action'])) {
+        $check_fin = check_finished_auctions();
+        if (is_array($check_fin)) {
+            for($i = 0; $i < count($check_fin); $i++) {
+                email_finished_auction($check_fin[$i][0]);
+            }
+        }
+
         $action = $_POST['action'];
         switch($action) {
                 case "reset":

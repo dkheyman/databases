@@ -2,8 +2,15 @@
     session_start();
     require 'db_functions.php';
     require 'helpers.php';
-    
+
     if (isset($_POST['action']) && !empty($_POST['action'])) {
+        $check_fin = check_finished_auctions();
+        if (is_array($check_fin)) {
+            for ($i = 0; $i < count($check_fin); $i++) {
+                email_finished_auction($check_fin[$i][0]);
+            }
+        }
+
         $action = $_POST['action'];
         switch($action) {
             case "add_bid":
@@ -70,7 +77,11 @@
                     return;
                 } else {
                     if (update_auction_price($auctionID, $value)) {
-                        if (email_bid_update("BID", $buyerID, $auctionID, $value) && email_bid_update("UPDATE", $sellerID, $auctionID, $value)) {
+                        ob_start();
+                        email_to_watches($auctionID, $value);
+                        $result = ob_get_clean();
+                        echo $result;
+                        if (email_to_watches($auctionID, $value) && email_bid_update("BID", $buyerID, $auctionID, $value) && email_bid_update("UPDATE", $sellerID, $auctionID, $value)) {
                             echo 1;
                         } else {
                             echo "Emailing bid updates failed";
@@ -85,6 +96,23 @@
         }
     }
 
+    function email_to_watches($auctionID, $value) {
+        $query = "SELECT buyerID from Watch where auctionID=?";
+        $args = array($auctionID);
+        $result = run_query($query, 's', $args);
+        if (is_array($result) && count($result) > 0) {
+            $ret = 1;
+            for($i = 0; $i < count($result); $i++) {
+                if ($result[$i][0] == $_SESSION['userID']) {
+                    continue;
+                }
+                $ret = $ret && email_bid_update("WATCHERS", $result[$i][0], $auctionID, $value);
+            }
+            return $ret;
+        } else {
+            return 1;
+        }
+    }
     function find_watcher($buyerID, $auctionID) {
         $query = "SELECT buyerID from Watch where buyerID=? AND auctionID=?";
         $args = array($buyerID, $auctionID);
@@ -217,6 +245,13 @@
             case "UPDATE":
                 $buyerID = $_SESSION['userID'];
                 $message = "Your auction \"$auctionID\" has been bid on!\n\n";
+                $details = "Bid Details:\n\n\t\tBidder: $buyerID\n\t\tBook: \"$title\"\n\t\tISBN Number: $isbn\n\t\tNew Asking Price: $$asking_price\n\t\t";
+                $closing = "\n\nSincerely, \nBookly.com";
+                $message = $message . $details . $closing;
+                break;
+            case "WATCHERS":
+                $buyerID = $_SESSION['userID'];
+                $message = "The watched auction \"$auctionID\" has been bid on!\n\n";
                 $details = "Bid Details:\n\n\t\tBidder: $buyerID\n\t\tBook: \"$title\"\n\t\tISBN Number: $isbn\n\t\tNew Asking Price: $$asking_price\n\t\t";
                 $closing = "\n\nSincerely, \nBookly.com";
                 $message = $message . $details . $closing;

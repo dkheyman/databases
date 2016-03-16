@@ -27,6 +27,7 @@
                     document.getElementById("message").innerHTML = "Auction ID not found!";
                 } else {
                     get_auction_by_id();
+                    get_bids_by_id();
                 }
             }
 
@@ -60,6 +61,26 @@
                         }
                     }
                 )
+            }
+
+            function get_bids_by_id() {
+                $.post("../php_calls/auctions.php",
+                    {
+                        action: "get_bids_by_id",
+                        auction: window.auction,
+                    },
+                    function(data) {
+                        console.log(data);
+                        if (data != 'No current bids') {
+                            print_bids(data);
+                        } else {
+                            if (data == 'No current bids') {
+                                document.getElementById('currBids').innerHTML = "Auction has not been bid on";
+                            } else {
+                                document.getElementById('currBids').innerHTML = data;
+                            }
+                        }
+                })
             }
 
             function redirect_to_bid() {
@@ -99,7 +120,10 @@
                 <a href="javascript:redirect_to_watch()" id="watch_btn">Watch Form</a><br/>
             </div>
             <div id="forms">
+                <h1 id="Header">Auction Details</h1>
                 <form id="user_auctions"></form>
+                <h1 id="bids">Bid List</h1>
+                <form id="currBids"></form>
                 <form id="message"></form> 
             </div>
         </body>

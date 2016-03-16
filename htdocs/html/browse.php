@@ -15,14 +15,21 @@ session_start();
         <script type="text/javascript" language="javascript">
 
             window.username = '';
-            window.genre = '';
+            
             $(document).ready(function() {
+                var params = window.location.search.substring(1);
+                window.genre = params.split('=')[1];
+                if (window.genre) {
+                    get_auction_by_genre(window.genre);
+                } else {
+                    get_auction_by_genre();
+                } 
                 get_available_genres();
                 $("#LogOutBtn").click(function() {
                     logout();
                 })
             });
-        
+
             function get_available_genres() {
                 $.post("../php_calls/auctions.php",
                         {
@@ -47,7 +54,7 @@ session_start();
                     function(data) {
                         console.log(data);
                         if (data != 0)
-                            print_current_auctions(data);
+                            print_current_auctions(data, 'with_id');
                         else
                             document.getElementById('currAucs').innerHTML = "No auctions found. Check back later!";
                     })
@@ -56,7 +63,6 @@ session_start();
             function update_browser() {
                     var category = document.querySelector('input[name="genre"]:checked').value;
                     window.location.href = "?genre=" + category;
-                    get_auction_by_genre(category);
             }
             
              function logout() {
@@ -77,12 +83,12 @@ session_start();
     </head>    
     <body>
         <a href="javascript:logout()" id="logOutBtn">Sign Out</a>
-    	<h1>
+        <h1>
     		<br> Active Auctions: <br>
         </h1>
-    	<form id="currAucs">
-    	</form>
-        <form id="genre_select">
-        </form>
+    	<div id="currAucs">
+    	</div>
+        <div id="genre_select">
+        </div>
    	</body>
 </html>

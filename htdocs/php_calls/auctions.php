@@ -5,6 +5,13 @@ session_start();
     require 'helpers.php';
 
 if(isset($_POST['action']) && !empty($_POST['action'])) {
+    $check_fin = check_finished_auctions();
+    if (is_array($check_fin)) {
+        for($i = 0; $i < count($check_fin); $i++) {
+            email_finished_auction($check_fin[$i][0]);
+        }
+    } 
+
 	$action = $_POST['action'];
 	switch($action) {
 		case "get_all_active_auctions":
@@ -50,6 +57,13 @@ if(isset($_POST['action']) && !empty($_POST['action'])) {
                 echo 0;
             }
             break;
+        case "get_bids_by_id":
+            if (isset($_POST['auction']) && !empty($_POST['auction'])) {
+                get_bids_by_id($_POST['auction']);
+            } else {
+                echo "Invalid auctionID";
+            }
+            break;
         case "get_genre":
             get_genre();
             break;
@@ -75,11 +89,22 @@ function get_users_auctions($userID) {
 				ON Auction.isbn = Book.isbn) 
                 WHERE Auction.userID = ?";
     $args = array($userID);
-	$result = run_query($query, 'ssddsssssssss', $args);
+	$result = run_query($query, 's', $args);
     if (is_array($result) && count($result) > 0) {
         echo json_encode($result);
     } else {
         echo "User $userID has no auctions";
+    }
+}
+
+function get_bids_by_id($auctionID) {
+    $query = "SELECT buyerID, value from Bid WHERE auctionID=? ORDER BY value DESC";
+    $args = array($auctionID);
+    $result = run_query($query, 's', $args);
+    if (is_array($result) && count($result) > 0) {
+        echo json_encode($result);
+    } else {
+        echo "No current bids";
     }
 }
 
@@ -95,7 +120,6 @@ function get_all_active_auctions() {
     if (is_array($result) && count($result) > 0) {
         echo json_encode($result);
     } else {
-        print_r($result);
         echo "No active auctions";
     }
 }
@@ -172,10 +196,10 @@ function add_auction() {
         $aucID = $aucID . chr(rand(65,90));
     }
     if ($_POST['endTime'] < $current_time) {
-        echo "Auction end time is invalid!";
+        echo "Auction end time is not valid";
         return;
     }
-    if (filter_var($POST['startPrice'], FILTER_VALIDATE_FLOAT) === 'false') {
+    if (filter_var($_POST['startPrice'], FILTER_VALIDATE_FLOAT) === 'false') {
         echo "Your auction starting price is invalid!";
         return;
     }
