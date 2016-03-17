@@ -3,6 +3,7 @@ function print_users_auctions(results) {
     var bid_div = document.createElement("div");
     bid_div.setAttribute("id", "auction_list");
     bid_div.setAttribute("class", "Table");
+    bid_div.appendChild(printHeaderSellerAuction());
     for (i = 0; i < results.length; i++) {
         var new_row = document.createElement("div");
         new_row.setAttribute("class", "Row");
@@ -32,6 +33,7 @@ function print_current_bids(results) {
     var bid_div = document.createElement("div");
     bid_div.setAttribute("id", "current_bids");
     bid_div.setAttribute("class", "Table");
+    bid_div.appendChild(createHeaderUserAuctions());
     for (i = 0; i < results.length; i++) {
         var new_row = document.createElement("div");
         new_row.setAttribute("class", "Row");
@@ -68,6 +70,7 @@ function print_past_bids(results) {
     var bid_div = document.createElement("div");
     bid_div.setAttribute("id", "past_bids");
     bid_div.setAttribute("class", "Table");
+    bid_div.appendChild(createHeaderUserAuctions());
     for (i = 0; i < results.length; i++) {
         var new_row = document.createElement("div");
         new_row.setAttribute("class", "Row");
@@ -103,6 +106,7 @@ function print_recommended(results) {
     var bid_div = document.createElement("div");
     bid_div.setAttribute("id", "cur_auctions");
     bid_div.setAttribute("class", "Table");
+    bid_div.appendChild(createHeaderUserAuctions());
     for (i = 0; i < /*results.length*/ 10; i++) {
         var new_row = document.createElement("div");
         new_row.setAttribute("class", "Row");
@@ -133,11 +137,26 @@ function print_recommended(results) {
     document.getElementById('recommended').appendChild(bid_div);
 }
 
+function createHeaderUserAuctions() {
+    var new_row = document.createElement("div");
+    new_row.setAttribute("class", "Row");
+    new_row.setAttribute("id", "headerRow");
+
+    var l= ["ISBN","Current Price", "Bid Value", "Seller", "End Time"];
+    for (i = 0; i < l.length; i++) {
+        var elem = document.createElement("td");
+        elem.setAttribute("class", "Cell");
+        elem.innerHTML = l[i];
+        new_row.appendChild(elem);
+    }
+}
+
 function print_current_auctions(results, type) {
     results = JSON.parse(results);
     var bid_div = document.createElement("div");
     bid_div.setAttribute("id", "cur_auctions");
     bid_div.setAttribute("class", "Table");
+    bid_div.appendChild(printHeaderSellerAuction());
     for (i = 0; i < results.length; i++) {
         var new_row = document.createElement("div");
         new_row.setAttribute("class", "Row");
@@ -186,6 +205,7 @@ function print_past_auctions(results, type) {
     var bid_div = document.createElement("div");
     bid_div.setAttribute("id", "past_auctions");
     bid_div.setAttribute("class", "Table");
+    bid_div.appendChild(printHeaderSellerAuction());
     for (i = 0; i < results.length; i++) {
         var new_row = document.createElement("div");
         new_row.setAttribute("class", "Row");
@@ -210,11 +230,27 @@ function print_past_auctions(results, type) {
     document.getElementById('pastAucs').appendChild(bid_div);
 }
 
+function printHeaderSellerAuction() {
+    var new_row = document.createElement("div");
+    new_row.setAttribute("class", "Row");
+    new_row.setAttribute("id", "headerRow");
+
+    var l= ["ISBN","Current Price", "Starting Price", "End Time", "Book Title",
+            "Author Surname", "Author First Name", "Condition", "Genre", "Publisher", "Language", ""];
+    for (i = 0; i < l.length; i++) {
+        var elem = document.createElement("td");
+        elem.setAttribute("class", "Cell");
+        elem.innerHTML = l[i];
+        new_row.appendChild(elem);
+    }
+}
+
 function print_watches(results) {
     results = JSON.parse(results);
     var bid_div = document.createElement("div");
     bid_div.setAttribute("id", "watch_list");
     bid_div.setAttribute("class", "Table");
+    bid_div.appendChild(createHeaderUserAuctions());
     for (i = 0; i < results.length; i++) {
         var new_row = document.createElement("div");
         new_row.setAttribute("class", "Row");
@@ -250,6 +286,7 @@ function print_bids(results) {
     var bid_div = document.createElement("div");
     bid_div.setAttribute("class", "Table");
     bid_div.setAttribute("id", "currBids");
+    bid_div.appendChild(printHeaderBid());
     for(i = 0; i < results.length; i++) {
         var new_row = document.createElement("div");
         new_row.setAttribute("class", "Row");
@@ -272,6 +309,20 @@ function print_bids(results) {
         bid_div.appendChild(new_row);
     }
     document.getElementById('currBids').appendChild(bid_div);
+}
+
+function printHeaderBid() {
+    var new_row = document.createElement("div");
+    new_row.setAttribute("class", "Row");
+    new_row.setAttribute("id", "headerRow");
+
+    var l= ["Buyer","Amount"];
+    for (i = 0; i < l.length; i++) {
+        var elem = document.createElement("td");
+        elem.setAttribute("class", "Cell");
+        elem.innerHTML = l[i];
+        new_row.appendChild(elem);
+    }
 }
 
 function print_books_with_radio(results) {
