@@ -15,15 +15,22 @@ session_start();
         <script type="text/javascript" language="javascript">
 
             window.username = '';
-            window.genre = '';
+            
             $(document).ready(function() {
-                get_available_genres();
+                var params = window.location.search.substring(1);
+                window.genre = params.split('=')[1];
+                if (window.genre) {
+                    get_auction_by_genre(window.genre);
+                } else {
+                    get_auction_by_genre();
+                } 
+                get_available_genres(window.genre);
                 $("#LogOutBtn").click(function() {
                     logout();
                 })
             });
-        
-            function get_available_genres() {
+
+            function get_available_genres(category) {
                 $.post("../php_calls/auctions.php",
                         {
                             action: "get_available_genres",
@@ -31,7 +38,7 @@ session_start();
                         function(data) {
                             console.log(data);
                             if (data != 0) {
-                                print_genres(data);
+                                print_genres(data, category);
                             } else {
                                 document.getElementById('genre_select').innerHTML = "No genres found!";
                             }
@@ -47,7 +54,7 @@ session_start();
                     function(data) {
                         console.log(data);
                         if (data != 0)
-                            print_current_auctions(data);
+                            print_current_auctions(data, 'with_id');
                         else
                             document.getElementById('currAucs').innerHTML = "No auctions found. Check back later!";
                     })
@@ -56,7 +63,6 @@ session_start();
             function update_browser() {
                     var category = document.querySelector('input[name="genre"]:checked').value;
                     window.location.href = "?genre=" + category;
-                    get_auction_by_genre(category);
             }
             
              function logout() {
@@ -74,7 +80,7 @@ session_start();
             }
 
         </script>
-    </head>    
+    </head>
     <body>
         <div class="container-fluid">
             <div class="row">
@@ -85,7 +91,7 @@ session_start();
                   <span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
                 </button> <a class="navbar-brand" href="welcome.php"><img src="../images/logo.jpeg" height="50" width="80" align="middle"></a>
               </div>
-        
+
               <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
                   <li>
@@ -102,7 +108,8 @@ session_start();
           </div>
         </div>
         <div class="row">
-            <div class="col-md-8">
+            <div class="col-md-4">
+                <h2>Genres</h2>
                 <form id="genre_select">
                 </form>
             </div>
@@ -113,5 +120,5 @@ session_start();
             </div>
         </div>
     </div>
-   	</body>
+    </body>
 </html>

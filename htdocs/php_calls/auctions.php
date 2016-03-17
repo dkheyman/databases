@@ -5,13 +5,21 @@ session_start();
     require 'helpers.php';
     require 'upload.php';
 
-$imageFileName="";
-$DEFAULT_IMAGE_LOCATION="noimage.png";
+$imageFileName = "";
+$DEFAULT_IMAGE_LOCATION = "noimage.png";
+
 if(isset($_POST['action']) && !empty($_POST['action'])) {
-    if (isset($_FILES['imageFile']) && !empty($_FILES['imageFile']) {
+    $check_fin = check_finished_auctions();
+    if (is_array($check_fin)) {
+        for($i = 0; $i < count($check_fin); $i++) {
+            email_finished_auction($check_fin[$i][0]);
+        }
+    }
+    if (isset($_FILES['imageFile']) && !empty($_FILES['imageFile'])) {
         $imageFileName = basename($_FILES["imageFile"]["name"]);
         imageUpload();
-    }
+    }  
+
 	$action = $_POST['action'];
 	switch($action) {
 		case "get_all_active_auctions":
@@ -51,9 +59,17 @@ if(isset($_POST['action']) && !empty($_POST['action'])) {
                 isset($_POST['date']) && !empty($_POST['date']) &&
                 isset($_POST['condition']) && !empty($_POST['condition']) &&
                 isset($_POST['binding']) && !empty($_POST['binding'])){
+
                 add_book();
             } else {
                 echo 0;
+            }
+            break;
+        case "get_bids_by_id":
+            if (isset($_POST['auction']) && !empty($_POST['auction'])) {
+                get_bids_by_id($_POST['auction']);
+            } else {
+                echo "Invalid auctionID";
             }
             break;
         case "get_genre":
@@ -68,9 +84,26 @@ if(isset($_POST['action']) && !empty($_POST['action'])) {
         case "get_available_genres":
             get_available_genres();
             break;
+        case "grab_start_end":
+            if (isset($_POST['auction']) && !empty($_POST['auction'])) {
+                check_start_end($_POST['auction']);
+            } else {
+                "Invalid auction ID";
+            }
+            break;
         default:
             echo "Wrong";
             break;
+    }
+}
+
+function check_start_end($auctionID) {
+    $current_time = current_time();
+    list($start_time, $end_time) = find_auction_start_end($auctionID);
+    if ($end_time > $current_time){
+        echo 1;
+    } else {
+        echo 0;
     }
 }
 
@@ -81,11 +114,22 @@ function get_users_auctions($userID) {
 				ON Auction.isbn = Book.isbn) 
                 WHERE Auction.userID = ?";
     $args = array($userID);
-	$result = run_query($query, 'ssddsssssssss', $args);
+	$result = run_query($query, 's', $args);
     if (is_array($result) && count($result) > 0) {
         echo json_encode($result);
     } else {
         echo "User $userID has no auctions";
+    }
+}
+
+function get_bids_by_id($auctionID) {
+    $query = "SELECT buyerID, value from Bid WHERE auctionID=? ORDER BY value DESC";
+    $args = array($auctionID);
+    $result = run_query($query, 's', $args);
+    if (is_array($result) && count($result) > 0) {
+        echo json_encode($result);
+    } else {
+        echo "No current bids";
     }
 }
 
@@ -101,7 +145,6 @@ function get_all_active_auctions() {
     if (is_array($result) && count($result) > 0) {
         echo json_encode($result);
     } else {
-        print_r($result);
         echo "No active auctions";
     }
 }
@@ -178,17 +221,17 @@ function add_auction() {
         $aucID = $aucID . chr(rand(65,90));
     }
     if ($_POST['endTime'] < $current_time) {
-        echo "Auction end time is invalid!";
+        echo "Auction end time is not valid";
         return;
     }
-    if (filter_var($POST['startPrice'], FILTER_VALIDATE_FLOAT) === 'false') {
+    if (filter_var($_POST['startPrice'], FILTER_VALIDATE_FLOAT) === 'false') {
         echo "Your auction starting price is invalid!";
         return;
     }
     $query = "INSERT INTO Auction (auctionID,
             asking_price, starting_price, userID,
-            isbn, start_time, end_time, description)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+            isbn, start_time, end_time, description, finished)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, '0')";
     $args = array($aucID, $_POST['startPrice'], $_POST['startPrice'],
         $_POST['userID'], $_POST['isbn'], $current_time,
         $_POST['endTime'], $_POST['description']);
@@ -243,6 +286,7 @@ function add_book() {
         $imageLoc = $imageFileName;
     else
         $imageLoc = $DEFAULT_IMAGE_LOCATION;
+
     $args = array($aucID, $_POST['title'], $_POST['isbn'],
         $_POST['aFirst'], $_POST['aLast'], $_POST['genre'],
         $_POST['publisher'], $_POST['language'], $_POST['date'],

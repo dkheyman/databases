@@ -49,7 +49,7 @@
                         }
 
                         function add_auction() {
-                                var isbn = document.getElementById('book').value; 
+                                var isbn = document.getElementById('book_name').value; 
 								$.post("../php_calls/auctions.php", 
 										{
 												action: "add_auction",

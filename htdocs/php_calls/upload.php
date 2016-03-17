@@ -1,5 +1,5 @@
 <?php
-function() imageUpload)() {
+function imageUpload() {
     $target_dir = "../images/";
     $target_file = $target_dir . basename($_FILES["imageFile"]["name"]);
     $uploadOk = 1;

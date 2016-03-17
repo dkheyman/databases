@@ -16,8 +16,8 @@
 
             window.auction = '';
             $(document).ready(function() {
-                hide_links();
                 get_auction_id();
+                hide_links();
             });
 
             function get_auction_id() {
@@ -27,6 +27,7 @@
                     document.getElementById("message").innerHTML = "Auction ID not found!";
                 } else {
                     get_auction_by_id();
+                    get_bids_by_id();
                 }
             }
 
@@ -38,6 +39,18 @@
                     function(data) {
                         console.log(data);
                         if (data === 'seller\n') {
+                            $("#bid_btn").hide();
+                            $("#watch_btn").hide();
+                        }
+                    })
+                $.post("../php_calls/auctions.php",
+                    {
+                        action: "grab_start_end",
+                        auction: window.auction,
+                    },
+                    function(data) {
+                        console.log(data);
+                        if (data == 0) {
                             $("#bid_btn").hide();
                             $("#watch_btn").hide();
                         }
@@ -60,6 +73,26 @@
                         }
                     }
                 )
+            }
+
+            function get_bids_by_id() {
+                $.post("../php_calls/auctions.php",
+                    {
+                        action: "get_bids_by_id",
+                        auction: window.auction,
+                    },
+                    function(data) {
+                        console.log(data);
+                        if (data != "\nNo current bids") {
+                            print_bids(data);
+                        } else {
+                            if (data == "\nNo current bids") {
+                                document.getElementById('currBids').innerHTML = "Auction has not been bid on";
+                            } else {
+                                document.getElementById('currBids').innerHTML = data;
+                            }
+                        }
+                })
             }
 
             function redirect_to_bid() {
@@ -101,7 +134,7 @@
                   <span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
                 </button> <a class="navbar-brand" href="welcome.php"><img src="../images/logo.jpeg" height="50" width="80" align="middle"></a>
               </div>
-        
+
               <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
                   <li>
@@ -137,9 +170,18 @@
             </div>
             <div class="row">
                 <div class="col-md-12">
+                    <h2>Bids</h2>    
+                    <form id="currBids"></form>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
                     <form id="message"></form>
                 </div>
             </div>
+            </div>
+        </body>
+
             </div>
         </body>
     </html>

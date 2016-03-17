@@ -6,14 +6,16 @@ session_start();
         <meta charset="uft-8">
         <title>Bookly- Profile</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+        <script type="text/javascript" language="javascript" src="../js/parse.js"></script>
+        <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.2/js/bootstrap.min.js"></script> 
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
         <!-- Optional Bootstrap theme -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css">
         <link rel="stylesheet" type="text/css" href="../css/table.css">
         <link rel="stylesheet" type="text/css" href="../css/stars.css">
-        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-        <script type="text/javascript" language="javascript" src="../js/parse.js"></script>
         <script type="text/javascript" language="javascript">
+
 
             window.username = '';
             window.userType = '';
@@ -48,7 +50,7 @@ session_start();
                             action: "get_user",
                         },
                         function(data) {
-                            if (data != 0 && ((window.username == "" || window.username == null) || data ==  window.username) {
+                            if (data != 0 && ((window.username == "" || window.username == null) || data ==  window.username)) {
                             	window.username = data;
                                 window.userType = "Seller";
                                 document.getElementById('user').innerHTML = "Welcome " + window.username + "!";
@@ -65,10 +67,11 @@ session_start();
             function get_rating() {
                 $.post("../php_calls/user.php",
                         {
-                            action: "get_user_rating",
+                            action: "get_rating",
                             userID: window.username,
                         },
                         function(data) {
+                            console.log(data);
                             if (data != 0 && data <= 5) {
                                 var rating = data;
                                 document.getElementById('star_rating').innerHTML = username + "<br>";
@@ -138,22 +141,28 @@ session_start();
                         }
                 })
             }
+
             function review_user() {
+                console.log(document.getElementsByName('rating'));
                 $.post("../php_calls/user.php",
                     {
                         action: "review",
                         content: $("#review_content").val(),
                         reviewee: window.username,
-                        rating: $("#rating").val(),
+                        rating: $("input:radio[name='rating']:checked").val(),
                     },
                     function(data) {
+                        console.log(data);
                         if (data != 1) {
                             document.getElementById('alert_contents').innerHTML = data;
-                            document.getElementById('alert').setAttribute("aria-hidden", "false");
+                            $('#alert').show();
+                        } else {
+                            $('#modal-container').close();
                         }
                     })
             }
-        </script>
+ 
+      </script>
     </head>    
     <body>
         <div class="container-fluid">
@@ -198,7 +207,7 @@ session_start();
             </div>
             <div class="row">
                 <div class="col-md-12" id="review">
-                    <a href="#modal-container" role="button" class="btn" data-toggle="modal" id="review_btn">Review Seller</a>
+                    <button type="button" data-target="#modal-container" role="button" class="btn btn-primary btn-large" data-toggle="modal" id="review_btn">Review Seller</button>
                 </div>
             </div>
             <div class="modal fade" id="modal-container" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -228,7 +237,7 @@ session_start();
                                 <input id="rating1" type="radio" name="rating" value="1">
                                 <label for="rating1">1</label>
                             </span>
-                            <div id="alert" class="alert alert-danger alert-dismissable" aria-hidden="true">
+                            <div id="alert" class="alert alert-danger alert-dismissable collapse" aria-hidden="true">
                                 <h4>
                                 Alert!
                                 </h4><div id="alert_contents"></div>
@@ -238,7 +247,7 @@ session_start();
                             <button type="button" class="btn btn-default" data-dismiss="modal">
                                 Close
                             </button> 
-                            <button type="button" class="btn btn-primary" action="javascript:review_user()" data-dismiss="modal">
+                            <button type="button" class="btn btn-primary" onClick="javascript:review_user()">
                                 Submit
                             </button>
                         </div>
@@ -246,7 +255,7 @@ session_start();
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-12">
                     <h1>
     		          <br> Current Auctions: <br>
     	           </h1>
@@ -254,7 +263,9 @@ session_start();
 
     	           </form>
                 </div>
-                <div class="col-md-6">
+            </div>
+            <div class="row">
+                <div class="col-md-12">
     	           <h1>
     		          <br> Past Auctions: <br>
     	           </h1>
@@ -262,6 +273,7 @@ session_start();
     	           </form>
                 </div>
             </div>
+        </div>
         </div>
    	</body>
 </html>

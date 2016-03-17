@@ -40,7 +40,5 @@ session_start();
     </script>
     </head>
     <body>
-        <div id=
-        <a id="btnLogOut" href="#">Sign Out</a>
     </body>
 </html>

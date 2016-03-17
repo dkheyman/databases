@@ -13,27 +13,7 @@
 				<link rel="stylesheet" type="text/css" href="../css/centerheader.css">
 				<script type = "text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 				<script type="text/javascript" language = "javascript">
-					verify_payment() {
-						/*$.post("../php_calls/auctions.php", 
-								{
-										action: "add_book",
-										title: $("#title").val(),
-										isbn: $("#isbn").val(),
-										aFirst: $("#aFirst").val(),
-										aLast: $("#aLast").val(),
-										genre: $("#genre").val(),
-										publisher: $("#publisher").val(),
-										language: $("#language").val(),
-										date: $("#date").val(),
-										condition: $("#condition option:selected").val(),
-										binding: $("#binding option:selected").val(),
-								},
-								function(data) {
-										if (data == 1) {
-										} else {
-											console.log("An error occurred");
-										}
-						})*/
+					function verify_payment() {
 						document.getElementById('container').innerHTML = "<h2>Payment succeeded! Congratulations</h2><br>Click <a href=&quot; welcome.php &quot;>here</a> to return to your profile";
 					}
 				</script>
@@ -86,8 +66,6 @@
 		<div class=row>
 			<div class="row">
 				<h3> Shipping Information: </h3>
-				<input type="radio" id="same_as" name="same_as" value="true" required> Same as billing info <br> or <br>
-				<input type="radio" id="same_as" name="same_as" value="false"><br>
 				<form class ="replacement">
 					Name: <input type="text" name="nameShip" id="nameShip" required><br>
 					Address Line 1: <input type="text" name="addr1Ship" id="addr1Ship" required><br>
@@ -102,12 +80,13 @@
 		<div class="row">
 			<div class="col-md-12">
 			 <form id="replace" class="replacement" action="javascript:verify_payment()" method="post">
-			 		Card Type:
+                    Card Type:
+
 			 		<input type="radio" id="cardType" name="cardType" value="visa"> Visa  <input type="radio" id="cardType" name="cardType" value="mastercard"> Mastercard <br>
-			 		<input type="radio" id="cardType" name="cardType" value="americanExpress"> americanExpress  <input type="radio" id="cardType" name="cardType" value="discover"> Discover <br>
-			 		Name: <input type="text" name="nameCard" id="nameCard" required><br>
-			 		Cardnumber: <input type="text" name="cardNum" id="cardNum" required><br>
-			 		CVV: <input type="password" name="cvv" id="cvv" required><br>
+			 		<input type="radio" id="cardType" name="cardType" value="americanExpress"> American Express  <input type="radio" id="cardType" name="cardType" value="discover"> Discover <br>
+			 		Name: <input type="text" name="nameCard" id="nameCard" required /><br>
+			 		Cardnumber: <input type="text" name="cardNum" id="cardNum" required /><br>
+			 		CVV: <input type="password" name="cvv" id="cvv" required /><br>
 					 <input class="btn btn-primary btn-large center-block" id="add_button" type="submit">
 			 </form>
 			</div>

@@ -4,6 +4,14 @@
     require 'helpers.php';
 
     if(isset($_POST['action']) && !empty($_POST['action'])) {
+
+        $check_fin = check_finished_auctions();
+        if (is_array($check_fin)) {
+            for ($i = 0; $i < count($check_fin); $i++) {
+                email_finished_auction($check_fin[$i][0]);
+            }
+        } 
+
         $action = $_POST['action'];
         switch($action) {
         	case "get_user":
@@ -62,11 +70,13 @@
                     review();
                 else
                     echo "An error occurred!";
+                break;
             case "get_rating":
                 if(isset($_POST['userID']) && strlen($_POST['userID'])) {
                     get_rating();
                 } else
                     echo 0;
+                break;
         	default:
                 echo "Wrong";
         }
@@ -137,6 +147,7 @@
             echo "No past bids";
         }
     }
+
     function get_current_aucs(){
         $current_time = current_time();
         $query = "SELECT Auction.auctionID, Auction.isbn, asking_price, starting_price, end_time,
@@ -144,13 +155,29 @@
                 FROM (Auction JOIN Book
                 ON Auction.isbn = Book.isbn)
                 WHERE auction.userID = ?
-                AND auction.end_time > ?";
+                AND auction.end_time > ?
+                ORDER BY auction.end_time ASC";
         $args = array($_POST['userID'], $current_time);
         $result = run_query($query, 'ss', $args);
         if (is_array($result) && count($result) > 0) {
+            for($i = 0; $i < count($result); $i++) {
+                $count = get_views($result[$i][0]);
+                array_push($result[$i], $count);
+            }
             echo json_encode($result);
         } else {
             echo "No current auctions";
+        }
+    }
+
+    function get_views($auctionID) {
+        $query = "SELECT COUNT(*) as views from View WHERE auctionID=?";
+        $args = array($auctionID);
+        $result = run_query($query, 's', $args);
+        if (is_array($result) && count($result) > 0) {
+            return $result[0][0];
+        } else {
+            return 0;
         }
     }
 
@@ -165,6 +192,10 @@
         $args = array($_POST['userID'], $current_time);
         $result = run_query($query, 'ss', $args);
         if (is_array($result) && count($result) > 0) {
+            for($i = 0; $i < count($result); $i++) {
+                $count = get_views($result[$i][0]);
+                array_push($result[$i], $count);
+            }
             echo json_encode($result);
         } else {
             echo "No past auctions";
@@ -184,7 +215,7 @@
             else
                 submit_review();
         } else {
-            echo "An error occured!"
+            echo "An error occurred!";
         }
     }
 
@@ -192,8 +223,8 @@
         $query = "INSERT INTO reviews(reviewerID, reviewedID, review, rating)
                     VALUES (?, ?, ?, ?)";
         $args = array($_SESSION['userID'], $_POST['reviewee'], $_POST['content'], $_POST['rating']);
-        $result = run_query($query, 'ss', $args);
-         if (is_array($result) && count($result) > 0) {
+        $result = execute_change($query, 'ssss', $args);
+         if (!is_string($result)) {
             echo 1;
         } else {
             echo "No past auctions";
@@ -207,8 +238,8 @@
         $args = array($_POST['userID']);
         $result = run_query($query, 's', $args);
         if (is_array($result) && count($result) > 0) {
-            echo intval($result);
-        } else 
+            echo intval($result[0][0]);
+        } else
             echo 0;
     }
 ?>

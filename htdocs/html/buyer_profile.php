@@ -6,13 +6,15 @@ session_start();
         <meta charset="uft-8">
         <title>Bookly- Profile</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+        <script type="text/javascript" language="javascript" src="../js/parse.js"></script>
+       <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.2/js/bootstrap.min.js"></script> 
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
         <!-- Optional Bootstrap theme -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css">
         <link rel="stylesheet" type="text/css" href="../css/table.css">
         <link rel="stylesheet" type="text/css" href="../css/stars.css">
-        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-        <script type="text/javascript" language="javascript" src="../js/parse.js"></script>
+
         <script type="text/javascript" language="javascript">
 
             window.username = '';
@@ -64,10 +66,6 @@ session_start();
                                     alert("Unable to find profile!");
                                 }
                             })
-                } else {
-                    window.userType = "Seller";
-                    run();
-                }
         	}
             
             function get_rating() {
@@ -187,7 +185,7 @@ session_start();
                             window.location.href = "http://localhost:8888/";
                         } else {
                             document.getElementById('messages').innerHTML = data;
-                            document.getElementById('errors').setAttribute("aria-hidden", "false");
+                            $('#errors').show();
                         }
                 })
             }
@@ -197,12 +195,14 @@ session_start();
                         action: "review",
                         content: $("#review_content").val(),
                         reviewee: window.username,
-                        rating: $("#rating").val(),
+                        rating: $("input:radio[name='rating']:checked").val(),
                     },
                     function(data) {
                         if (data != 1) {
                             document.getElementById('alert_contents').innerHTML = data;
-                            document.getElementById('alert').setAttribute("aria-hidden", "false");
+                            $('#alert').show();
+                        } else {
+                            $('#modal-container').close();
                         }
                     })
             }
@@ -246,7 +246,7 @@ session_start();
             </div>
             <div class="row">
                 <div class="col-md-12" id="browse">
-                    <a href="browse.php" id="auction_btn" class="btn">Auction List</a>
+                    <a data-target="browse.php" id="auction_btn" class="btn btn-primary btn-large">Auction List</a>
                 </div>
             </div>
             <div class="row">
@@ -281,7 +281,7 @@ session_start();
                                 <input id="rating1" type="radio" name="rating" value="1">
                                 <label for="rating1">1</label>
                             </span>
-                            <div id="alert" class="alert alert-danger alert-dismissable" aria-hidden="true">
+                            <div id="alert" class="alert alert-danger alert-dismissable collapse" aria-hidden="true">
                                 <h4>
                                 Alert!
                                 </h4><div id="alert_contents"></div>
@@ -291,14 +291,14 @@ session_start();
                             <button type="button" class="btn btn-default" data-dismiss="modal">
                                 Close
                             </button> 
-                            <button type="button" class="btn btn-primary" action="javascript:review_user()" data-dismiss="modal">
+                            <button type="button" class="btn btn-primary" onClick="javascript:review_user()" data-dismiss="modal">
                                 Submit
                             </button>
                         </div>
                     </div>
                 </div>
             </div>
-            <div id="errors" class="alert alert-danger alert-dismissable" aria-hidden="false">
+            <div id="errors" class="alert alert-danger alert-dismissable collapse" aria-hidden="false">
                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
                     ×
                 </button>
