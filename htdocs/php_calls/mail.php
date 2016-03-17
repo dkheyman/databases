@@ -102,7 +102,6 @@
             echo "Password must include at least one letter!";
             return;
         }
-        echo 1;
     }
 
     function grab_usertype($userID) {
