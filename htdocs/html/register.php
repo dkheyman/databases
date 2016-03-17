@@ -15,7 +15,6 @@
         <script type="text/javascript" src="../js/login.js"></script>
         <script type="text/javascript" language="javascript">
             function add_user() {
-                if (test_password($("#password").val())) {
                     $.post("../php_calls/mail.php",
                         {
                             action: "add_user",
@@ -32,9 +31,6 @@
                                 alert(data);
                             }
                         })
-                } else {
-                    return;
-                }
             }
         </script>
     </head>    

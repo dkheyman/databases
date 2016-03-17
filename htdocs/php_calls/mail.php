@@ -197,6 +197,7 @@
     }
 
     function add_user($userID, $password, $email, $user_type ) {
+        test_password($password);
         $result = find_userID($userID);
         if ($result == 1) {
             echo "UserID $userID already exists!\n";
