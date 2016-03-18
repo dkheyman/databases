@@ -84,14 +84,14 @@
 
     function get_recommendations(){
         $current_time = current_time();
-        $query = "SELECT DISTINCT auction.auctionID, isbn, userID, end_time
-                FROM auction JOIN bid ON auction.auctionID = bid.auctionID 
-                WHERE bid.buyerID IN (SELECT buyerID FROM (SELECT auction.auctionID 
-                    FROM (auction JOIN bid ON auction.auctionID = bid.auctionID) WHERE bid.buyerID = ?) d1 
-                    JOIN bid b ON d1.auctionID = b.auctionID WHERE b.buyerID <> ?) 
-                AND auction.auctionID NOT IN (SELECT auction.auctionID 
-                    FROM (auction JOIN bid ON auction.auctionID = bid.auctionID) WHERE bid.buyerID = ?)
-                AND auction.end_time > ?";
+        $query = "SELECT DISTINCT Auction.auctionID, isbn, userID, end_time
+                FROM Auction JOIN Bid ON auction.auctionID = Bid.auctionID 
+                WHERE Bid.buyerID IN (SELECT buyerID FROM (SELECT Auction.auctionID 
+                    FROM (Auction JOIN Bid ON Auction.auctionID = Bid.auctionID) WHERE Bid.buyerID = ?) d1 
+                    JOIN Bid b ON d1.auctionID = b.auctionID WHERE b.buyerID <> ?) 
+                AND Auction.auctionID NOT IN (SELECT Auction.auctionID 
+                    FROM (Auction JOIN Bid ON Auction.auctionID = Bid.auctionID) WHERE Bid.buyerID = ?)
+                AND Auction.end_time > ?";
         $args = array($_POST['userID'], $_POST['userID'], $_POST['userID'], $current_time);
         $result = run_query($query, 'ssss', $args);
         if (is_array($result) && count($result) > 0) {
@@ -103,11 +103,11 @@
     
     function get_current_bids(){
         $current_time = current_time();
-    	$query = "SELECT auction.auctionID, isbn, asking_price, value, userID, end_time
-				FROM (auction JOIN bid
-				ON auction.auctionID = bid.auctionID)
-				WHERE bid.buyerID = ?
-                AND auction.end_time > ?";
+    	$query = "SELECT Auction.auctionID, isbn, asking_price, value, userID, end_time
+				FROM (Auction JOIN Bid
+				ON Auction.auctionID = Bid.auctionID)
+				WHERE Bid.buyerID = ?
+                AND Auction.end_time > ?";
         $args = array($_POST['userID'], $current_time);
         $result = run_query($query, 'ss', $args);
         if (is_array($result) && count($result) > 0) {
@@ -118,11 +118,11 @@
     }
     function get_watches(){
         $current_time = current_time();
-    	$query = "SELECT auction.auctionID, isbn, asking_price, starting_price, userID, end_time
-				FROM (auction JOIN watch
-				ON auction.auctionID = watch.auctionID)
-				WHERE watch.buyerID = ?
-                AND auction.end_time > ?";
+    	$query = "SELECT Auction.auctionID, isbn, asking_price, starting_price, userID, end_time
+				FROM (Auction JOIN Watch
+				ON Auction.auctionID = Watch.auctionID)
+				WHERE Watch.buyerID = ?
+                AND Auction.end_time > ?";
         $args = array($_POST['userID'], $current_time);
         $result = run_query($query, 'ss', $args);
         if (is_array($result) && count($result) > 0) {
@@ -134,11 +134,11 @@
 
     function get_past_bids(){
         $current_time = current_time();
-        $query = "SELECT auction.auctionID, isbn, asking_price, value, userID, end_time
-				FROM (auction JOIN bid
-				ON auction.auctionID = bid.auctionID)
-                WHERE bid.buyerID = ?
-                AND auction.end_time <= ?";
+        $query = "SELECT Auction.auctionID, isbn, asking_price, value, userID, end_time
+				FROM (Auction JOIN Bid
+				ON Auction.auctionID = Bid.auctionID)
+                WHERE Bid.buyerID = ?
+                AND Auction.end_time <= ?";
         $args = array($_POST['userID'], $current_time);
         $result = run_query($query, 'ss', $args);
         if (is_array($result) && count($result) > 0) {
@@ -154,9 +154,9 @@
                 title, aLast, aFirst, book_condition, genre, publisher, language, date
                 FROM (Auction JOIN Book
                 ON Auction.isbn = Book.isbn)
-                WHERE auction.userID = ?
-                AND auction.end_time > ?
-                ORDER BY auction.end_time ASC";
+                WHERE Auction.userID = ?
+                AND Auction.end_time > ?
+                ORDER BY Auction.end_time ASC";
         $args = array($_POST['userID'], $current_time);
         $result = run_query($query, 'ss', $args);
         if (is_array($result) && count($result) > 0) {
