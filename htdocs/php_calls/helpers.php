@@ -58,7 +58,7 @@
     function email_winning_bidder($winnerID, $auctionID, $value, $title, $isbn) {
         $email = find_email($winnerID);
         $subject = "Congratulations! You're A Winner!";
-        $message = "You have won auction \"$auctionID\" for your winning bid of $$value. Please pay immediately at: \n\n\t\thttp://localhost:8888/html/pay.php?auction_id=$auctionID\n\n";
+        $message = "You have won auction \"$auctionID\" for your winning bid of $$value. Please pay immediately at: \n\n\t\tec2-54-191-91-107.us-west-2.compute.amazonaws.com/html/pay.php?auction_id=$auctionID\n\n";
         $details = "Book Details: \n\t\tTitle: \"$title\"\n\t\tISBN: $isbn\n\n";
         $closing = "Sincerely, \nBookly.com";
         $message = $message . $details . $closing;

@@ -25,7 +25,7 @@
                         },
                         function(data) {
                             if (data == 1) {
-                                window.location = 'http://localhost:8888/html/welcome.php';
+                                window.location = '/html/welcome.php';
                             }
                             else {
                                 alert(data);

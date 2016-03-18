@@ -74,7 +74,7 @@ session_start();
                     },
                     function(data) {
                         if (data == 1) {
-                            window.location.href = "http://localhost:8888/";
+                            window.location.href = "/";
                         } else {
                             alert("Logout failed");
                         }
