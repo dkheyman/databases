@@ -8,6 +8,7 @@ session_start();
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
         <script type="text/javascript" language="javascript" src="../js/parse.js"></script>
+        <script type="text/javascript" language="javascript" src="../js/sorttable.js"></script>
         <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.2/js/bootstrap.min.js"></script> 
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
         <!-- Optional Bootstrap theme -->
@@ -31,6 +32,7 @@ session_start();
                 get_rating();
                 get_current_aucs();
                 get_past_aucs();
+                $.getScript("../js/sorttable.js"), function() {};
             }
             
             function hide_links() {
@@ -157,7 +159,8 @@ session_start();
                             document.getElementById('alert_contents').innerHTML = data;
                             $('#alert').show();
                         } else {
-                            $('#modal-container').close();
+                            $('#modal-container').modal('toggle');
+                            get_rating();
                         }
                     })
             }
@@ -165,7 +168,7 @@ session_start();
       </script>
     </head>    
     <body>
-        <div class="container-fluid">
+        <div class="container">
             <div class="row">
           <div class="col-md-12">
             <nav class="navbar navbar-default navbar-static-top" role="navigation">

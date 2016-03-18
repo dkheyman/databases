@@ -1,17 +1,19 @@
 function print_users_auctions(results) {
     results = JSON.parse(results);
-    var bid_div = document.createElement("div");
+    var bid_div = document.createElement("table");
+    var bid_body = document.createElement("tbody");
     bid_div.setAttribute("id", "auction_list");
-    bid_div.setAttribute("class", "Table");
-    bid_div.appendChild(printHeaderSellerAuction());
+    bid_div.setAttribute("class", "sortable");
+    bid_div.appendChild(printHeaderUserAuction());
     for (i = 0; i < results.length; i++) {
-        var new_row = document.createElement("div");
+        var new_row = document.createElement("tr");
         new_row.setAttribute("class", "Row");
         new_row.setAttribute("id", "row" + i);
         for(j = 0; j < results[i].length; j++) {
             var elem = document.createElement("td");
             elem.setAttribute("class", "Cell");
             if (j == 0) {
+                results[i][j] = results[i][j].toFixed(2);
                 results[i][j] = '$' + results[i][j];
             }
             if (j == results[i].length - 1) {
@@ -23,19 +25,21 @@ function print_users_auctions(results) {
             }
             new_row.appendChild(elem);
         }
-        bid_div.appendChild(new_row);
+        bid_body.appendChild(new_row);
     }
+    bid_div.appendChild(bid_body);
     document.getElementById('user_auctions').appendChild(bid_div);
 }
 
 function print_current_bids(results) {
     results = JSON.parse(results);
-    var bid_div = document.createElement("div");
+    var bid_div = document.createElement("table");
     bid_div.setAttribute("id", "current_bids");
-    bid_div.setAttribute("class", "Table");
+    bid_div.setAttribute("class", "sortable");
     bid_div.appendChild(createHeaderUserAuctions());
+    var bid_body = document.createElement("tbody");
     for (i = 0; i < results.length; i++) {
-        var new_row = document.createElement("div");
+        var new_row = document.createElement("tr");
         new_row.setAttribute("class", "Row");
         new_row.setAttribute("id", "row" + i);
         for(j = 1; j < results[i].length; j++) {
@@ -45,9 +49,9 @@ function print_current_bids(results) {
                 var addr = "seller_profile.php?seller_id=" + encodeURIComponent(results[i][4]);
                 var inner = "<a href=" + addr + ">" + results[i][4] + "</a>";
                 elem.innerHTML = inner;
-                console.log(elem);
             } else {
                 if (j == 2 || j == 3) {
+                    results[i][j] = results[i][j].toFixed(2);
                     results[i][j] = '$' + results[i][j];
                 }
                 if (j == 1) {
@@ -60,19 +64,21 @@ function print_current_bids(results) {
             }
             new_row.appendChild(elem);
         }
-        bid_div.appendChild(new_row);
+        bid_body.appendChild(new_row);
     }
+    bid_div.appendChild(bid_body);
     document.getElementById('currBids').appendChild(bid_div);
 }
 
 function print_past_bids(results) {
     results = JSON.parse(results);
-    var bid_div = document.createElement("div");
+    var bid_div = document.createElement("table");
     bid_div.setAttribute("id", "past_bids");
-    bid_div.setAttribute("class", "Table");
+    bid_div.setAttribute("class", "sortable");
+    var bid_body = document.createElement("tbody");
     bid_div.appendChild(createHeaderUserAuctions());
     for (i = 0; i < results.length; i++) {
-        var new_row = document.createElement("div");
+        var new_row = document.createElement("tr");
         new_row.setAttribute("class", "Row");
         new_row.setAttribute("id", "row" + i);
         for(j = 1; j < results[i].length; j++) {
@@ -84,6 +90,7 @@ function print_past_bids(results) {
                 elem.innerHTML = inner;
             } else {
                 if (j == 2 || j == 3) {
+                    results[i][j] = results[i][j].toFixed(2);
                     results[i][j] = '$' + results[i][j];
                 }
                 if (j == 1) {
@@ -96,32 +103,31 @@ function print_past_bids(results) {
             }
             new_row.appendChild(elem);
         }
-        bid_div.appendChild(new_row);
+        bid_body.appendChild(new_row);
     }
+    bid_div.appendChild(bid_body);
     document.getElementById('pastBids').appendChild(bid_div);
 }
 
 function print_recommended(results) {
     results = JSON.parse(results);
-    var bid_div = document.createElement("div");
+    var bid_div = document.createElement("table");
+    var bid_body = document.createElement("tbody");
     bid_div.setAttribute("id", "cur_auctions");
-    bid_div.setAttribute("class", "Table");
-    bid_div.appendChild(createHeaderUserAuctions());
-    for (i = 0; i < /*results.length*/ 10; i++) {
-        var new_row = document.createElement("div");
+    bid_div.setAttribute("class", "sortable");
+    bid_div.appendChild(createHeaderUserAuctions('recs'));
+    for (i = 0; i < results.length; i++) {
+        var new_row = document.createElement("tr");
         new_row.setAttribute("class", "Row");
         new_row.setAttribute("id", "row" + i);
         for(j = 1; j < results[i].length; j++) {
             var elem = document.createElement("td");
             elem.setAttribute("class", "Cell");
-            if (j == 4) {
-                var addr = "seller_profile.php?seller_id=" + encodeURIComponent(results[i][4]);
-                var inner = "<a href=" + addr + ">" + results[i][4] + "</a>";
+            if (j == 2) {
+                var addr = "seller_profile.php?seller_id=" + encodeURIComponent(results[i][2]);
+                var inner = "<a href=" + addr + ">" + results[i][2] + "</a>";
                 elem.innerHTML = inner;
             } else {
-                if (j == 2 || j == 3) {
-                    results[i][j] = '$' + results[i][j];
-                }
                 if (j == 1) {
                     var addr = "auction.php?auction_id=" + results[i][0];
                     var inner = "<a href=" + addr + ">" + results[i][j] + "</a>";
@@ -132,33 +138,47 @@ function print_recommended(results) {
             }
             new_row.appendChild(elem);
         }
-        bid_div.appendChild(new_row);
+        bid_body.appendChild(new_row);
     }
+    bid_div.appendChild(bid_body);
     document.getElementById('recommended').appendChild(bid_div);
 }
 
-function createHeaderUserAuctions() {
-    var new_row = document.createElement("div");
+function createHeaderUserAuctions(recs) {
+    var new_head = document.createElement("thead");
+    var new_row = document.createElement("tr");
     new_row.setAttribute("class", "Row");
     new_row.setAttribute("id", "headerRow");
 
-    var l= ["ISBN","Current Price", "Bid Value", "Seller", "End Time"];
+    var l;
+    if (recs)
+    l = ["ISBN", "Seller", "End Time"];
+    else 
+    l = ["ISBN","Current Price", "Bid Value", "Seller", "End Time"];
+    
     for (i = 0; i < l.length; i++) {
-        var elem = document.createElement("td");
+        var elem = document.createElement("th");
         elem.setAttribute("class", "Cell");
         elem.innerHTML = l[i];
         new_row.appendChild(elem);
     }
+    new_head.appendChild(new_row);
+    return new_head;
 }
 
 function print_current_auctions(results, type) {
     results = JSON.parse(results);
-    var bid_div = document.createElement("div");
+    var bid_div = document.createElement("table");
+    var bid_body = document.createElement("tbody");
     bid_div.setAttribute("id", "cur_auctions");
-    bid_div.setAttribute("class", "Table");
-    bid_div.appendChild(printHeaderSellerAuction());
+    bid_div.setAttribute("class", "sortable");
+    if (type == 'with_id') {
+        bid_div.appendChild(printHeaderSellerAuction('with_id'));
+    } else {
+        bid_div.appendChild(printHeaderSellerAuction());
+    }
     for (i = 0; i < results.length; i++) {
-        var new_row = document.createElement("div");
+        var new_row = document.createElement("tr");
         new_row.setAttribute("class", "Row");
         new_row.setAttribute("id", "row" + i);
         for(j = 1; j < results[i].length; j++) {
@@ -171,6 +191,7 @@ function print_current_auctions(results, type) {
                     elem.innerHTML = inner;
                 } else {
                     if (j == 3 || j == 4) {
+                        results[i][j] = results[i][j].toFixed(2);
                         results[i][j] = '$' + results[i][j];
                     }
                     if (j == 2) {
@@ -183,6 +204,7 @@ function print_current_auctions(results, type) {
                 }
             } else {
                 if (j == 2 || j == 3) {
+                    results[i][j] = results[i][j].toFixed(2);
                     results[i][j] = '$' + results[i][j];
                 }
                 if (j == 1) {
@@ -195,25 +217,28 @@ function print_current_auctions(results, type) {
             }
             new_row.appendChild(elem);
         }
-        bid_div.appendChild(new_row);
+        bid_body.appendChild(new_row);
     }
+    bid_div.appendChild(bid_body);
     document.getElementById('currAucs').appendChild(bid_div);
 }
 
 function print_past_auctions(results, type) {
     results = JSON.parse(results);
-    var bid_div = document.createElement("div");
+    var bid_div = document.createElement("table");
+    var bid_body = document.createElement("tbody");
     bid_div.setAttribute("id", "past_auctions");
-    bid_div.setAttribute("class", "Table");
+    bid_div.setAttribute("class", "sortable");
     bid_div.appendChild(printHeaderSellerAuction());
     for (i = 0; i < results.length; i++) {
-        var new_row = document.createElement("div");
+        var new_row = document.createElement("tr");
         new_row.setAttribute("class", "Row");
         new_row.setAttribute("id", "row" + i);
         for(j = 1; j < results[i].length; j++) {
             var elem = document.createElement("td");
             elem.setAttribute("class", "Cell");
             if (j == 2 || j == 3) {
+                results[i][j] = results[i][j].toFixed(2);
                 results[i][j] = '$' + results[i][j];
             }
             if (j == 1) {
@@ -225,34 +250,63 @@ function print_past_auctions(results, type) {
             }
             new_row.appendChild(elem);
         }
-        bid_div.appendChild(new_row);
+        bid_body.appendChild(new_row);
     }
+    bid_div.appendChild(bid_body);
     document.getElementById('pastAucs').appendChild(bid_div);
 }
 
-function printHeaderSellerAuction() {
-    var new_row = document.createElement("div");
+function printHeaderSellerAuction(option) {
+    var new_head = document.createElement("thead");
+    var new_row = document.createElement("tr");
     new_row.setAttribute("class", "Row");
     new_row.setAttribute("id", "headerRow");
 
-    var l= ["ISBN","Current Price", "Starting Price", "End Time", "Book Title",
-            "Author Surname", "Author First Name", "Condition", "Genre", "Publisher", "Language", ""];
+    var l;
+    if (!option) {
+        l = ["ISBN","Current Price", "Starting Price", "End Time", "Book Title",
+             "Author Surname", "Author First Name", "Condition", "Genre", "Publisher", "Language", "Date Published", "Viewer Traffic"];
+    } else {
+        l = ["Seller","ISBN","Current Price", "Starting Price", "End Time", "Book Title",
+             "Author Surname", "Author First Name", "Condition", "Genre", "Publisher", "Language", "Date Published"];
+    }
     for (i = 0; i < l.length; i++) {
-        var elem = document.createElement("td");
+        var elem = document.createElement("th");
         elem.setAttribute("class", "Cell");
         elem.innerHTML = l[i];
         new_row.appendChild(elem);
     }
+    new_head.appendChild(new_row);
+    return new_head;
+}
+
+function printHeaderUserAuction() {
+    var new_head = document.createElement("thead");
+    var new_row = document.createElement("tr");
+    new_row.setAttribute("class", "Row");
+    new_row.setAttribute("id", "headerRow");
+
+    var l= ["Current Price", "ISBN", "End Time", "Book Title",
+            "Author Surname", "Author First Name", "Condition", "Genre", "Publisher", "Language", "Date Published", "Seller"];
+    for (i = 0; i < l.length; i++) {
+        var elem = document.createElement("th");
+        elem.setAttribute("class", "Cell");
+        elem.innerHTML = l[i];
+        new_row.appendChild(elem);
+    }
+    new_head.appendChild(new_row);
+    return new_head;
 }
 
 function print_watches(results) {
     results = JSON.parse(results);
-    var bid_div = document.createElement("div");
+    var bid_div = document.createElement("table");
+    var bid_body = document.createElement("tbody");
     bid_div.setAttribute("id", "watch_list");
-    bid_div.setAttribute("class", "Table");
+    bid_div.setAttribute("class", "sortable");
     bid_div.appendChild(createHeaderUserAuctions());
     for (i = 0; i < results.length; i++) {
-        var new_row = document.createElement("div");
+        var new_row = document.createElement("tr");
         new_row.setAttribute("class", "Row");
         new_row.setAttribute("id", "row" + i);
         for(j = 1; j < results[i].length; j++) {
@@ -264,6 +318,7 @@ function print_watches(results) {
                 elem.innerHTML = inner;
             } else {
                 if (j == 2 || j == 3) {
+                    results[i][j] = results[i][j].toFixed(2);
                     results[i][j] = '$' + results[i][j];
                 }
                 if (j == 1) {
@@ -276,19 +331,21 @@ function print_watches(results) {
             }
             new_row.appendChild(elem);
         }
-        bid_div.appendChild(new_row);
+        bid_body.appendChild(new_row);
     }
+    bid_div.appendChild(bid_body);
     document.getElementById('watches').appendChild(bid_div);
 }
 
 function print_bids(results) {
     results = JSON.parse(results);
-    var bid_div = document.createElement("div");
+    var bid_div = document.createElement("table");
+    var bid_body = document.createElement("tbody");
     bid_div.setAttribute("class", "Table");
     bid_div.setAttribute("id", "currBids");
     bid_div.appendChild(printHeaderBid());
     for(i = 0; i < results.length; i++) {
-        var new_row = document.createElement("div");
+        var new_row = document.createElement("tr");
         new_row.setAttribute("class", "Row");
         new_row.setAttribute("id", "row" + i);
         for(j = 0; j < results[i].length; j++) {
@@ -300,29 +357,34 @@ function print_bids(results) {
                 elem.innerHTML = inner;
             } else {
                 if (j == 1) {
+                    results[i][j] = results[i][j].toFixed(2);
                     results[i][j] = '$' + results[i][j];
                 }
                 elem.innerHTML = results[i][j];
             }
             new_row.appendChild(elem);
         }
-        bid_div.appendChild(new_row);
+        bid_body.appendChild(new_row);
     }
+    bid_div.appendChild(bid_body);
     document.getElementById('currBids').appendChild(bid_div);
 }
 
 function printHeaderBid() {
-    var new_row = document.createElement("div");
+    var new_head = document.createElement("thead");
+    var new_row = document.createElement("tr");
     new_row.setAttribute("class", "Row");
     new_row.setAttribute("id", "headerRow");
 
     var l= ["Buyer","Amount"];
     for (i = 0; i < l.length; i++) {
-        var elem = document.createElement("td");
+        var elem = document.createElement("th");
         elem.setAttribute("class", "Cell");
         elem.innerHTML = l[i];
         new_row.appendChild(elem);
     }
+    new_head.appendChild(new_row);
+    return new_head;
 }
 
 function print_books_with_radio(results) {
@@ -330,7 +392,7 @@ function print_books_with_radio(results) {
     var book_div = document.createElement("select");
     book_div.setAttribute("id", "book_name");
     book_div.setAttribute("class", "Row");
-    for(j = 0; j < results[0].length; j++) {
+    for(j = 0; j < results.length; j++) {
         var book = document.createElement("option");
         book.setAttribute("name", "book" + j);
         book.setAttribute("id", "book");

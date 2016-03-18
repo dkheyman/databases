@@ -84,14 +84,14 @@
 
     function get_recommendations(){
         $current_time = current_time();
-        $query = "SELECT auction.auctionID, isbn, asking_price, value, userID, end_time
+        $query = "SELECT DISTINCT auction.auctionID, isbn, userID, end_time
                 FROM auction JOIN bid ON auction.auctionID = bid.auctionID 
                 WHERE bid.buyerID IN (SELECT buyerID FROM (SELECT auction.auctionID 
                     FROM (auction JOIN bid ON auction.auctionID = bid.auctionID) WHERE bid.buyerID = ?) d1 
                     JOIN bid b ON d1.auctionID = b.auctionID WHERE b.buyerID <> ?) 
                 AND auction.auctionID NOT IN (SELECT auction.auctionID 
                     FROM (auction JOIN bid ON auction.auctionID = bid.auctionID) WHERE bid.buyerID = ?)
-                AND aution.end_time > ?";
+                AND auction.end_time > ?";
         $args = array($_POST['userID'], $_POST['userID'], $_POST['userID'], $current_time);
         $result = run_query($query, 'ssss', $args);
         if (is_array($result) && count($result) > 0) {

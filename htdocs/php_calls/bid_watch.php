@@ -61,7 +61,7 @@
                 return;
             }
             if ($asking_price >= $value) {
-                echo "Your bid is too low! Current asking price is $asking_price";
+                echo "Your bid is too low! Current asking price is $$asking_price.";
                 return;
             }
             if (filter_var($value, FILTER_VALIDATE_FLOAT) === 'false' ) {

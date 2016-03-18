@@ -12,8 +12,8 @@
 				<link rel="stylesheet" type="text/css" href="../css/form.css">
 				<link rel="stylesheet" type="text/css" href="../css/centerheader.css">
 				<script type = "text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-				<script type="text/javascript" language = "javascript">
-					add_book() {
+                <script type="text/javascript" language = "javascript">
+				    function add_book() {
 						$.post("../php_calls/auctions.php", 
 								{
 										action: "add_book",
@@ -29,16 +29,18 @@
 										binding: $("#binding option:selected").val(),
 								},
 								function(data) {
-										if (data == 1) {
+                                        console.log(data);
+                                        if (data == 1) {
+                                            window.location.href = "create_auction.php";
 										} else {
-											console.log("An error occurred");
-										}
+                                            document.getElementById('message').innerHTML = data;
+                                        }
 						})
 					}
 				</script>
 		</head>
 		<body>
-			<div class="container-fluid">
+			<div class="container">
             <div class="row">
           <div class="col-md-12">
             <nav class="navbar navbar-default navbar-static-top" role="navigation">
@@ -63,18 +65,6 @@
             </nav>
           </div>
         </div>
-        <div class="row">
-        	<div class="col-md-12"
-			 	<h2 class="replacement">Add Book to Database</h2>
-			 </div>
-		</div>
-		<div class="row">
-			<div class="col-md-12">
-			 <form id="addImage" class="replacement" action="javascript:add_image()" enctype="multipart/form-data" method="post">
-			 		Submit a Photo: <input type="file" name="imageFile" id="imageFile">
-			 		<input class="btn btn-primary btn-large center-block" id="add_image" type="submit">
-			 </form>
-		</div>
 		<div class="row">
 			<div class="col-md-12">
 			 <form id="replace" class="replacement" action="javascript:add_book()" method="post">
@@ -85,7 +75,7 @@
 			 		 Genre: <input type='text' name='genre' id='genre' value="" required/>
 			 		 Publisher: <input type='text' name='publisher' id='publisher' value=""/>
 			 		 Language: <input type='text' name='language' id='language' value="English" required/>
-			 		 Date: <input type="date" name="date"><br>
+			 		 Date: <input type="date" id="date" name="date"><br>
 			 		 Condition: <select id="condition" name="condition">
 			 		 	<option value="New"> New </option>
 			 		 	<option value="Used:Excellent"> Used:Excellent </option>
@@ -93,7 +83,7 @@
 			 		 	<option value="Used:Fair"> Used:Fair </option>
 			 		 	<option value="Used:Poor"> Used:Poor </option>
 			 		 </select>
-			 		 Condition: <select id="binding" name="condition">
+			 		 Binding: <select id="binding" name="condition">
 			 		 	<option value="Hardcover"> Hardcover </option>
 			 		 	<option value="Softcover"> Softcover </option>
 			 		 	<option value="Leather"> Leather </option>
@@ -103,6 +93,10 @@
 			 </form>
 			</div>
 		</div>
-	</div>
+    </div>
+    <div class="row">
+        <form id="message">
+        </form>
+    </div>
 		</body>
 </html>

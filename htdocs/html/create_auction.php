@@ -39,8 +39,9 @@
 								{
 										action: "get_all_books",
 								},
-								function(data){
-									if (data != 0) {
+                                function(data){
+                                    console.log(data);
+									if (data != 'No books found') {
 										print_books_with_radio(data);
                                     } else {
                                         document.GetElementById('message').innerHTML = "No books found!";
@@ -61,6 +62,7 @@
 										},
 								function(data) {
                                     console.log(data);
+                                    data = data.replace(/\s+/g, "");
                                     if (data.length == 32 ) {
                                            window.location.href = "auction.php?auction_id=" + data;
 										} else {
@@ -71,7 +73,7 @@
 				</script>
 	 </head>
 	 <body>
-	 		<div class="container-fluid">
+	 		<div class="container">
             <div class="row">
           <div class="col-md-12">
             <nav class="navbar navbar-default navbar-static-top" role="navigation">
@@ -95,6 +97,11 @@
               </div>
             </nav>
           </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12" id="add_book">
+                <a href="create_book.php" id="add_book_btn" class="btn btn-primary btn-large center-block">Add A Book</a>
+            </div>
         </div>
         <div class="row">
         	<div class="col-md-12">

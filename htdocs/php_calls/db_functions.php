@@ -12,8 +12,6 @@
             $result = mysqli_stmt_get_result($query);
             if ($result) {
                 $rows = mysqli_fetch_all($result);
-                mysqli_stmt_free_result($query);
-                mysqli_stmt_close($query);
                 mysqli_close($con);
                 return $rows;
             } else {

@@ -19,7 +19,7 @@
 				</script>
 		</head>
 		<body>
-			<div class="container-fluid" id="container">
+			<div class="container" id="container">
             <div class="row">
           <div class="col-md-12">
             <nav class="navbar navbar-default navbar-static-top" role="navigation">

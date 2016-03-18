@@ -28,6 +28,7 @@
                 } else {
                     get_auction_by_id();
                     get_bids_by_id();
+                    get_description();
                 }
             }
 
@@ -86,13 +87,24 @@
                         if (data != "\nNo current bids") {
                             print_bids(data);
                         } else {
-                            if (data == "\nNo current bids") {
+                            if (data == "No current bids") {
                                 document.getElementById('currBids').innerHTML = "Auction has not been bid on";
                             } else {
                                 document.getElementById('currBids').innerHTML = data;
                             }
                         }
                 })
+            }
+
+            function get_description() {
+                $.post("../php_calls/auctions.php",
+                    {
+                        action: "get_description",
+                        auction: window.auction,
+                    },
+                    function(data) {
+                        document.getElementById('description').innerHTML = data;
+                    })
             }
 
             function redirect_to_bid() {
@@ -125,7 +137,7 @@
             </script>
         </head>
         <body>
-            <div class="container-fluid">
+            <div class="container">
             <div class="row">
           <div class="col-md-12">
             <nav class="navbar navbar-default navbar-static-top" role="navigation">
@@ -169,9 +181,13 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-12">
+                <div class="col-md-6">
                     <h2>Bids</h2>    
                     <form id="currBids"></form>
+                </div>
+                <div class="col-md-6">
+                    <h2>Description</h2>    
+                    <form id="description"></form>
                 </div>
             </div>
             <div class="row">

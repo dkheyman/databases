@@ -12,6 +12,7 @@ session_start();
         <link rel="stylesheet" type="text/css" href="../css/table.css">
         <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
         <script type="text/javascript" language="javascript" src="../js/parse.js"></script>
+        <script type="text/javascript" language="javascript" src="../js/sorttable.js"></script>
         <script type="text/javascript" language="javascript">
 
             window.username = '';
@@ -52,9 +53,10 @@ session_start();
                         genre: category,
                     },
                     function(data) {
-                        console.log(data);
-                        if (data != 0)
+                        if (data != "No active auctions") {
                             print_current_auctions(data, 'with_id');
+                            $.getScript("../js/sorttable.js"), function() {};
+                        }
                         else
                             document.getElementById('currAucs').innerHTML = "No auctions found. Check back later!";
                     })
@@ -108,12 +110,12 @@ session_start();
           </div>
         </div>
         <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-2">
                 <h2>Genres</h2>
                 <form id="genre_select">
                 </form>
             </div>
-            <div class="col-md-8">
+            <div class="col-md-10">
                 <h2> Active Auctions: </h2>
                 <form id="currAucs">
                 </form>

@@ -102,6 +102,7 @@
             echo "Password must include at least one letter!";
             return;
         }
+        echo 1;
     }
 
     function grab_usertype($userID) {
@@ -196,7 +197,13 @@
     }
 
     function add_user($userID, $password, $email, $user_type ) {
+        ob_start();
         test_password($password);
+        $test = ob_get_clean();
+        if ($test != 1) {
+            echo $test;
+            return;
+        }
         $result = find_userID($userID);
         if ($result == 1) {
             echo "UserID $userID already exists!\n";

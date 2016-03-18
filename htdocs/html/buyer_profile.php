@@ -34,6 +34,8 @@ session_start();
                 get_watches();
                 get_past_bids();
                 get_rating();
+                $.getScript("../js/sorttable.js"), function() {
+                };
             }
 
             function hide_links() {
@@ -71,7 +73,7 @@ session_start();
             function get_rating() {
                 $.post("../php_calls/user.php",
                         {
-                            action: "get_user_rating",
+                            action: "get_rating",
                             userID: window.username,
                         },
                         function(data) {
@@ -202,14 +204,15 @@ session_start();
                             document.getElementById('alert_contents').innerHTML = data;
                             $('#alert').show();
                         } else {
-                            $('#modal-container').close();
+                            $('#modal-container').modal('toggle');
+                            get_rating();
                         }
                     })
             }
         </script>
     </head>    
     <body>
-        <div class="container-fluid">
+        <div class="container">
             <div class="row">
               <div class="col-md-12">
                 <nav class="navbar navbar-default navbar-static-top" role="navigation">
@@ -246,12 +249,12 @@ session_start();
             </div>
             <div class="row">
                 <div class="col-md-12" id="browse">
-                    <a data-target="browse.php" id="auction_btn" class="btn btn-primary btn-large">Auction List</a>
+                    <a href="browse.php" id="auction_btn" class="btn btn-primary btn-large">Auction List</a>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-12" id="review">
-                    <a href="#modal-container" role="button" class="btn" data-toggle="modal" id="review_btn">Review Seller</a>
+                    <a data-target="#modal-container" role="button" class="btn btn-primary btn-large" data-toggle="modal" id="review_btn">Review Buyer</a>
                 </div>
             </div>
             <div class="modal fade" id="modal-container" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">

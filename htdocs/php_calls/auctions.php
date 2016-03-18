@@ -5,9 +5,6 @@ session_start();
     require 'helpers.php';
     require 'upload.php';
 
-$imageFileName = "";
-$DEFAULT_IMAGE_LOCATION = "noimage.png";
-
 if(isset($_POST['action']) && !empty($_POST['action'])) {
     $check_fin = check_finished_auctions();
     if (is_array($check_fin)) {
@@ -15,14 +12,9 @@ if(isset($_POST['action']) && !empty($_POST['action'])) {
             email_finished_auction($check_fin[$i][0]);
         }
     }
-    if (isset($_FILES['imageFile']) && !empty($_FILES['imageFile'])) {
-        $imageFileName = basename($_FILES["imageFile"]["name"]);
-        imageUpload();
-    }  
-
 	$action = $_POST['action'];
 	switch($action) {
-		case "get_all_active_auctions":
+        case "get_all_active_auctions":
 			get_all_active_auctions();
             break;
         case "get_auction_by_id":
@@ -42,7 +34,6 @@ if(isset($_POST['action']) && !empty($_POST['action'])) {
                 isset($_POST['startPrice']) && !empty($_POST['startPrice']) &&
                 isset($_POST['description']) && !empty($_POST['description']) &&
                 isset($_POST['isbn']) && !empty($_POST['isbn'])) {
-
                 add_auction();
             } else {
                 echo "Invalid parameters";
@@ -59,10 +50,16 @@ if(isset($_POST['action']) && !empty($_POST['action'])) {
                 isset($_POST['date']) && !empty($_POST['date']) &&
                 isset($_POST['condition']) && !empty($_POST['condition']) &&
                 isset($_POST['binding']) && !empty($_POST['binding'])){
-
                 add_book();
             } else {
-                echo 0;
+                echo "Invalid arguments";
+            }
+            break;
+        case "get_description":
+            if (isset($_POST['auction']) && !empty($_POST['auction'])) {
+                get_description($_POST['auction']);
+            } else {
+                echo "Invalid auctionID";
             }
             break;
         case "get_bids_by_id":
@@ -119,6 +116,17 @@ function get_users_auctions($userID) {
         echo json_encode($result);
     } else {
         echo "User $userID has no auctions";
+    }
+}
+
+function get_description($auctionID) {
+    $query = "SELECT description from Auction where auctionID=?";
+    $args = array($auctionID);
+	$result = run_query($query, 's', $args);
+    if (is_array($result) && count($result) > 0) {
+        echo $result[0][0];
+    } else {
+        echo "No description";
     }
 }
 
@@ -230,8 +238,8 @@ function add_auction() {
     }
     $query = "INSERT INTO Auction (auctionID,
             asking_price, starting_price, userID,
-            isbn, start_time, end_time, description, finished)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, '0')";
+            isbn, start_time, end_time, description)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
     $args = array($aucID, $_POST['startPrice'], $_POST['startPrice'],
         $_POST['userID'], $_POST['isbn'], $current_time,
         $_POST['endTime'], $_POST['description']);
@@ -275,26 +283,43 @@ function get_available_genres() {
     }
 }
 
+function query_isbn($isbn) {
+    $query = "SELECT DISTINCT isbn
+            FROM Book WHERE isbn=?";
+    $args = array($isbn);
+    $result = run_query($query, "s", $args);
+    if (is_array($result) && count($result) > 0) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
+
+
 
 function add_book() {
-    $query = "INSERT INTO book (title,
+    if (strlen($_POST['isbn']) != 13) {
+        echo "Your ISBN is invalid. Please enter a 13 character string";
+        return;
+    }
+    if (query_isbn($_POST['isbn'])) {
+        echo "Your book already exists in our DB!";
+        return;
+    }
+    $query = "INSERT INTO Book (title,
             isbn, aFirst, aLast,
             genre, publisher, language, date,
-            condition, binding, imageURL)
+            book_condition, binding, imageURL)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-    if ($imageFileName != "")
-        $imageLoc = $imageFileName;
-    else
-        $imageLoc = $DEFAULT_IMAGE_LOCATION;
-
-    $args = array($aucID, $_POST['title'], $_POST['isbn'],
+    $args = array($_POST['title'], $_POST['isbn'],
         $_POST['aFirst'], $_POST['aLast'], $_POST['genre'],
         $_POST['publisher'], $_POST['language'], $_POST['date'],
-        $_POST['condition'], $_POST['binding'], $imageLoc);
-    $result = run_query($query, 'sssssssssss', $args);
-    if ($result == 1)
-        echo 1;
+        $_POST['condition'], $_POST['binding'], 'noimage.png');
+    $result = execute_change($query, 'sssssssssss', $args);
+    if (is_string($result))
+        echo "An error occurred adding your book";
     else
-        echo 0;
+        echo 1;
+
 }
 ?>
